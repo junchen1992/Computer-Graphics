@@ -88,7 +88,7 @@ public class LittleWall implements ActionListener {
 		os.drawString("(3) Z: move left foot.", 50, 240);
 		os.drawString("(4) X: move right foot.", 50, 260);
 		os.drawString("(5) space: move entire body.", 50, 280);
-		System.out.println(os.getFont());
+		// System.out.println(os.getFont());
 
 		// add a logo:
 		os.setColor(Color.magenta);

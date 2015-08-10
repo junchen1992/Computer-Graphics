@@ -1,4 +1,5 @@
 package lab2;
+
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -140,13 +141,14 @@ public class PlayerSpring implements MouseMotionListener, KeyListener {
 
 		// This is the section of code you need to modify to draw a more
 		// realistic climber.
-		
+
 		for (Spring s : springs) {
 			s.draw(of);
 		}
-		
-		// a head, hair, clothes, a harness, chalk bag, thick arms, thick legs, hands, and shoes.
-		
+
+		// a head, hair, clothes, a harness, chalk bag, thick arms, thick legs,
+		// hands, and shoes.
+
 		// System.out.println(n.getX() + " " + n.getY());
 		// of.setColor(Color.red);
 		of.setStroke(new BasicStroke(0.07f));
@@ -154,32 +156,33 @@ public class PlayerSpring implements MouseMotionListener, KeyListener {
 		// head:
 		double headWidth = 0.2;
 		of.draw(new Ellipse2D.Double(n.getX() - headWidth, n.getY(), 2 * headWidth, 2 * headWidth));
-		
+
 		// springs:
 		lRad.draw(of);
 		lTib.draw(of);
 		lHum.draw(of);
-		lFem.draw(of);
+		// lFem.draw(of);
 		rRad.draw(of);
 		rTib.draw(of);
 		rHum.draw(of);
-		rFem.draw(of);
+		// rFem.draw(of);
 		Lum1.draw(of);
 		Lum2.draw(of);
-		
+
 		// clavs:
 		of.setStroke(new BasicStroke(0.03f));
 		lClav.draw(of);
 		rClav.draw(of);
-		
+
 		// hair:
 		double hairLength = 0.2;
 		of.setStroke(new BasicStroke(0.01f));
 		of.draw(new Line2D.Double(n.getX(), n.getY() + 2 * headWidth, n.getX(), n.getY() + 2 * headWidth + hairLength));
-		of.draw(new Line2D.Double(n.getX(), n.getY() + 2 * headWidth, n.getX() + 0.1, n.getY() + 2 * headWidth + hairLength));
-		of.draw(new Line2D.Double(n.getX(), n.getY() + 2 * headWidth, n.getX() - 0.1, n.getY() + 2 * headWidth + hairLength));
-	
-		
+		of.draw(new Line2D.Double(n.getX(), n.getY() + 2 * headWidth, n.getX() + 0.1,
+				n.getY() + 2 * headWidth + hairLength));
+		of.draw(new Line2D.Double(n.getX(), n.getY() + 2 * headWidth, n.getX() - 0.1,
+				n.getY() + 2 * headWidth + hairLength));
+
 		// clothes:
 		Path2D clothes = new Path2D.Double();
 		clothes.moveTo(ls.getX(), ls.getY());
@@ -190,29 +193,68 @@ public class PlayerSpring implements MouseMotionListener, KeyListener {
 		of.draw(clothes);
 		of.setColor(Color.blue);
 		of.fill(clothes);
-		
+
+		// pants:
+		of.setColor(Color.green);
+		double pantsSize = 0.07;
+
+		Path2D lpants = new Path2D.Double();
+		Path2D rpants = new Path2D.Double();
+		Path2D fill1 = new Path2D.Double();
+		Path2D fill2 = new Path2D.Double();
+
+		lpants.moveTo(p.getX() - pantsSize, p.getY() - pantsSize);
+		lpants.lineTo(ln.getX() - pantsSize, ln.getY() - pantsSize);
+		lpants.lineTo(ln.getX() + pantsSize, ln.getY() + pantsSize);
+		lpants.lineTo(p.getX() + pantsSize, p.getY() + pantsSize);
+		lpants.closePath();
+
+		rpants.moveTo(p.getX() - pantsSize, p.getY() - pantsSize);
+		rpants.lineTo(rn.getX() - pantsSize, rn.getY() - pantsSize);
+		rpants.lineTo(rn.getX() + pantsSize, rn.getY() + pantsSize);
+		rpants.lineTo(p.getX() + pantsSize, p.getY() + pantsSize);
+		rpants.closePath();
+
+		fill1.moveTo(ls.getX(), p.getY());
+		fill1.lineTo(p.getX() - pantsSize, p.getY() - pantsSize);
+		fill1.lineTo(p.getX(), p.getY());
+		fill1.closePath();
+
+		fill2.moveTo(rs.getX(), p.getY());
+		fill2.lineTo(p.getX() + pantsSize, p.getY() + pantsSize);
+		fill2.lineTo(p.getX(), p.getY());
+		fill2.closePath();
+
+		of.draw(lpants);
+		of.draw(rpants);
+		of.fill(lpants);
+		of.fill(rpants);
+		of.draw(fill1);
+		of.fill(fill1);
+		of.draw(fill2);
+		of.fill(fill2);
+
 		// hands:
 		double handSize = 0.1;
-		Ellipse2D.Double lhand = new Ellipse2D.Double(lh.getX() - handSize, lh.getY() - handSize, 0.2, 0.2);		
+		Ellipse2D.Double lhand = new Ellipse2D.Double(lh.getX() - handSize, lh.getY() - handSize, 0.2, 0.2);
 		Ellipse2D.Double rhand = new Ellipse2D.Double(rh.getX() - handSize, rh.getY() - handSize, 0.2, 0.2);
 		of.draw(lhand);
 		of.draw(rhand);
 		of.setColor(Color.YELLOW);
 		of.fill(lhand);
 		of.fill(rhand);
-		
+
 		// shoes:
 		double shoeSize = 0.1;
-		Ellipse2D.Double lshoe = new Ellipse2D.Double(lf.getX() - shoeSize, lf.getY() - shoeSize, 0.3, 0.2);		
+		Ellipse2D.Double lshoe = new Ellipse2D.Double(lf.getX() - shoeSize, lf.getY() - shoeSize, 0.3, 0.2);
 		Ellipse2D.Double rshoe = new Ellipse2D.Double(rf.getX() - shoeSize, rf.getY() - shoeSize, 0.3, 0.2);
 		of.draw(lshoe);
 		of.draw(rshoe);
 		of.setColor(Color.GRAY);
 		of.fill(lshoe);
 		of.fill(rshoe);
-		
-		// pants:
-		
+
+		// TODO! harness/chalk bag.
 		
 	}
 
