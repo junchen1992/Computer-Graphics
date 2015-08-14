@@ -149,11 +149,9 @@ public class PlayerSpring implements MouseMotionListener, KeyListener {
 		// a head, hair, clothes, a harness, chalk bag, thick arms, thick legs,
 		// hands, and shoes.
 
-		// System.out.println(n.getX() + " " + n.getY());
-		// of.setColor(Color.red);
 		of.setStroke(new BasicStroke(0.07f));
 
-		// head:
+		// TODO! head:
 		double headWidth = 0.2;
 		of.draw(new Ellipse2D.Double(n.getX() - headWidth, n.getY(), 2 * headWidth, 2 * headWidth));
 
@@ -174,7 +172,7 @@ public class PlayerSpring implements MouseMotionListener, KeyListener {
 		lClav.draw(of);
 		rClav.draw(of);
 
-		// hair:
+		// TODO! hair:
 		double hairLength = 0.2;
 		of.setStroke(new BasicStroke(0.01f));
 		of.draw(new Line2D.Double(n.getX(), n.getY() + 2 * headWidth, n.getX(), n.getY() + 2 * headWidth + hairLength));
@@ -183,7 +181,7 @@ public class PlayerSpring implements MouseMotionListener, KeyListener {
 		of.draw(new Line2D.Double(n.getX(), n.getY() + 2 * headWidth, n.getX() - 0.1,
 				n.getY() + 2 * headWidth + hairLength));
 
-		// clothes:
+		// TODO! clothes:
 		Path2D clothes = new Path2D.Double();
 		clothes.moveTo(ls.getX(), ls.getY());
 		clothes.lineTo(ls.getX(), p.getY());
@@ -194,7 +192,7 @@ public class PlayerSpring implements MouseMotionListener, KeyListener {
 		of.setColor(Color.blue);
 		of.fill(clothes);
 
-		// pants:
+		// TODO! pants:
 		of.setColor(Color.green);
 		double pantsSize = 0.07;
 
@@ -234,7 +232,7 @@ public class PlayerSpring implements MouseMotionListener, KeyListener {
 		of.draw(fill2);
 		of.fill(fill2);
 
-		// hands:
+		// TODO! hands:
 		double handSize = 0.1;
 		Ellipse2D.Double lhand = new Ellipse2D.Double(lh.getX() - handSize, lh.getY() - handSize, 0.2, 0.2);
 		Ellipse2D.Double rhand = new Ellipse2D.Double(rh.getX() - handSize, rh.getY() - handSize, 0.2, 0.2);
@@ -244,7 +242,7 @@ public class PlayerSpring implements MouseMotionListener, KeyListener {
 		of.fill(lhand);
 		of.fill(rhand);
 
-		// shoes:
+		// TODO! shoes:
 		double shoeSize = 0.1;
 		Ellipse2D.Double lshoe = new Ellipse2D.Double(lf.getX() - shoeSize, lf.getY() - shoeSize, 0.3, 0.2);
 		Ellipse2D.Double rshoe = new Ellipse2D.Double(rf.getX() - shoeSize, rf.getY() - shoeSize, 0.3, 0.2);
@@ -258,10 +256,6 @@ public class PlayerSpring implements MouseMotionListener, KeyListener {
 		of.setColor(Color.red);
 		double bagSize = 0.2;
 		Path2D bag = new Path2D.Double();
-		// System.out.println(p.getX() + " " + p.getY());
-		// System.out.println(ls.getX() + " " + ls.getY());
-		// System.exit(0);
-		
 		bag.moveTo(ls.getX(), p.getY());
 		bag.lineTo(ls.getX() + bagSize, p.getY());
 		bag.lineTo(ls.getX() + bagSize, p.getY() + bagSize);
@@ -270,7 +264,24 @@ public class PlayerSpring implements MouseMotionListener, KeyListener {
 		of.draw(bag);
 		of.fill(bag);
 
-		// TODO! harness
+		// TODO! harness.
+		of.setColor(Color.GRAY);
+		of.setStroke(new BasicStroke(0.07f));
+
+		Path2D line1 = new Path2D.Double();
+		line1.moveTo(ls.getX() + 0.07, n.getY());
+		line1.lineTo(ls.getX() + 0.07, p.getY());
+		of.draw(line1);
+
+		Path2D line2 = new Path2D.Double();
+		line2.moveTo(rs.getX() - 0.07, n.getY());
+		line2.lineTo(rs.getX() - 0.07, p.getY());
+		of.draw(line2);
+
+		Path2D line3 = new Path2D.Double();
+		line3.moveTo(ls.getX() + 0.07, (n.getY() + p.getY()) / 2.0);
+		line3.lineTo(rs.getX() - 0.07, (n.getY() + p.getY()) / 2.0);
+		of.draw(line3);
 
 	}
 
