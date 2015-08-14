@@ -254,8 +254,24 @@ public class PlayerSpring implements MouseMotionListener, KeyListener {
 		of.fill(lshoe);
 		of.fill(rshoe);
 
-		// TODO! harness/chalk bag.
+		// TODO! chalk bag.
+		of.setColor(Color.red);
+		double bagSize = 0.2;
+		Path2D bag = new Path2D.Double();
+		// System.out.println(p.getX() + " " + p.getY());
+		// System.out.println(ls.getX() + " " + ls.getY());
+		// System.exit(0);
 		
+		bag.moveTo(ls.getX(), p.getY());
+		bag.lineTo(ls.getX() + bagSize, p.getY());
+		bag.lineTo(ls.getX() + bagSize, p.getY() + bagSize);
+		bag.lineTo(ls.getX(), p.getY() + bagSize);
+		bag.closePath();
+		of.draw(bag);
+		of.fill(bag);
+
+		// TODO! harness
+
 	}
 
 	public void update(GameComponent canvas, Wall wall) {

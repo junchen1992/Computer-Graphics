@@ -1,4 +1,5 @@
 package lab2;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -106,10 +107,10 @@ public class LittleWall implements ActionListener {
 		} catch (IOException e) {
 		}
 		AffineTransform trans = new AffineTransform(1.0, 0.0, 0.0, 1.0, 400, 200);
-		trans.translate(-400, -200);		
+		trans.translate(-400, -200);
 		double theta = Math.PI / 10;
 		trans.rotate(theta);
-		trans.translate(400, 200);	
+		trans.translate(400, 200);
 		trans.translate(100, -150);
 		os.drawImage(img, trans, null);
 
