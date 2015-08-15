@@ -7,7 +7,6 @@ import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -21,16 +20,21 @@ import javax.swing.JComponent;
  * Eric McCreath 2009 2015
  */
 
-public class DrawArea extends JComponent implements MouseMotionListener, MouseListener {
+public class DrawArea extends JComponent implements MouseMotionListener,
+		MouseListener {
 
 	private static final long serialVersionUID = 1L;
 	private BufferedImage offscreen;
 	Dimension dim;
 	DrawIt drawit;
 
+	// last starting point:
+	private int x = -1, y = -1;
+
 	public DrawArea(Dimension dim, DrawIt drawit) {
 		this.setPreferredSize(dim);
-		offscreen = new BufferedImage(dim.width, dim.height, BufferedImage.TYPE_INT_RGB);
+		offscreen = new BufferedImage(dim.width, dim.height,
+				BufferedImage.TYPE_INT_RGB);
 		this.dim = dim;
 		this.drawit = drawit;
 		this.addMouseMotionListener(this);
@@ -58,10 +62,18 @@ public class DrawArea extends JComponent implements MouseMotionListener, MouseLi
 		g.drawImage(offscreen, 0, 0, null);
 	}
 
+	/**
+	 * when dragging the mouse, draw line on screen.
+	 */
 	public void mouseDragged(MouseEvent m) {
 		Graphics2D g = offscreen.createGraphics();
 		g.setColor((Color) drawit.colorToolbar.getSelectCommand());
-		g.fill(new Ellipse2D.Double(m.getX() - 1.0, m.getY() - 1.0, 2.0, 2.0));
+
+		// g.fill(new Ellipse2D.Double(m.getX() - 1.0, m.getY() - 1.0, 2.0,
+		// 2.0));
+		g.drawLine(x, y, m.getX(), m.getY());
+		x = m.getX();
+		y = m.getY();
 		drawOffscreen();
 	}
 
@@ -77,10 +89,20 @@ public class DrawArea extends JComponent implements MouseMotionListener, MouseLi
 	public void mouseExited(MouseEvent e) {
 	}
 
+	/**
+	 * set the point when the mouse presses as the drawing starting point.
+	 */
 	public void mousePressed(MouseEvent e) {
+		this.x = e.getX();
+		this.y = e.getY();
 	}
 
+	/**
+	 * after the mouse released, reset the starting drawing point.
+	 */
 	public void mouseReleased(MouseEvent e) {
+		this.x = -1;
+		this.y = -1;
 	}
 
 	public void export(File file) {

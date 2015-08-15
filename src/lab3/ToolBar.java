@@ -16,7 +16,7 @@ import javax.swing.JRadioButton;
  * ToolBar - this is a widget for a list of radio buttons.
  * 
  * @author Eric McCreath
- *
+ * 
  */
 
 public class ToolBar extends JPanel implements ActionListener {
