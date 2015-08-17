@@ -18,7 +18,8 @@ public abstract class LineAlias {
 
 	static Dimension dim = new Dimension(640, 480);
 
-	abstract void line(BufferedImage buf, int x0, int y0, int xn, int yn, int rgb);
+	abstract void line(BufferedImage buf, int x0, int y0, int xn, int yn,
+			int rgb);
 
 	public static void main(String[] args) throws InterruptedException {
 		JFrame jframe;
@@ -28,10 +29,17 @@ public abstract class LineAlias {
 		// set up the jframe and bufferedimages
 
 		jframe = new JFrame("Line Drawing");
-		offscreen1 = new BufferedImage(dim.width, dim.height, BufferedImage.TYPE_INT_RGB);
-		offscreen2 = new BufferedImage(dim.width, dim.height, BufferedImage.TYPE_INT_RGB);
+		offscreen1 = new BufferedImage(dim.width, dim.height,
+				BufferedImage.TYPE_INT_RGB);
+		offscreen2 = new BufferedImage(dim.width, dim.height,
+				BufferedImage.TYPE_INT_RGB);
 		JPanel mainpanel = new JPanel();
 		canvas1 = new JComponent() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			public void paint(Graphics g) {
 				g.drawImage(offscreen1, 0, 0, null);
 			}
@@ -39,6 +47,11 @@ public abstract class LineAlias {
 		canvas1.setSize(dim);
 		canvas1.setPreferredSize(dim);
 		canvas2 = new JComponent() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			public void paint(Graphics g) {
 				g.drawImage(offscreen2, 0, 0, null);
 			}
@@ -105,7 +118,8 @@ public abstract class LineAlias {
 					int x;
 					for (x = xpxl1 + 1; x <= (xpxl2 - 1); x++) {
 						buf.setRGB(x, ipart(intery), RGB(rfpart(intery), rgb));
-						buf.setRGB(x, ipart(intery) + 1, RGB(fpart(intery), rgb));
+						buf.setRGB(x, ipart(intery) + 1,
+								RGB(fpart(intery), rgb));
 						intery += gradient;
 					}
 				} else {
@@ -136,7 +150,8 @@ public abstract class LineAlias {
 					int y;
 					for (y = ypxl1 + 1; y <= (ypxl2 - 1); y++) {
 						buf.setRGB(ipart(interx), y, RGB(rfpart(interx), rgb));
-						buf.setRGB(ipart(interx) + 1, y, RGB(fpart(interx), rgb));
+						buf.setRGB(ipart(interx) + 1, y,
+								RGB(fpart(interx), rgb));
 						interx += gradient;
 					}
 				}
@@ -151,7 +166,8 @@ public abstract class LineAlias {
 
 		// dot the second image with blue where it is different
 		Thread.sleep(5000);
-		System.out.println(dotDifference(offscreen1, offscreen2) + " differences found.");
+		System.out.println(dotDifference(offscreen1, offscreen2)
+				+ " differences found.");
 		canvas2.repaint();
 
 		// do the speed test
@@ -226,7 +242,8 @@ public abstract class LineAlias {
 	}
 
 	private static long speedtest(Line line) {
-		BufferedImage buf = new BufferedImage(dim.width, dim.height, BufferedImage.TYPE_INT_RGB);
+		BufferedImage buf = new BufferedImage(dim.width, dim.height,
+				BufferedImage.TYPE_INT_RGB);
 		long start = System.nanoTime();
 		for (int i = 0; i < 5000; i++) {
 			Graphics g = buf.getGraphics();
@@ -240,6 +257,7 @@ public abstract class LineAlias {
 
 	private static int dotDifference(BufferedImage s1, BufferedImage s2) {
 		int res = 0;
+		@SuppressWarnings("unused")
 		int blue = (new Color(0.0f, 0.0f, 1.0f)).getRGB();
 		for (int x = 0; x < s1.getWidth(); x++) {
 			for (int y = 0; y < s1.getHeight(); y++) {
@@ -258,8 +276,10 @@ public abstract class LineAlias {
 		int green = (new Color(0.0f, 1.0f, 0.0f)).getRGB();
 
 		for (double t = 0.0; t < Math.PI * 2.0; t += Math.PI / 16.0) {
-			lr.line(buf, 100 + (int) (Math.sin(t) * 15.0), 100 + (int) (Math.cos(t) * 15.0),
-					100 + (int) (Math.sin(t) * 85.0), 100 + (int) (Math.cos(t) * 85.0), red);
+			lr.line(buf, 100 + (int) (Math.sin(t) * 15.0),
+					100 + (int) (Math.cos(t) * 15.0),
+					100 + (int) (Math.sin(t) * 85.0),
+					100 + (int) (Math.cos(t) * 85.0), red);
 		}
 
 		Random r = new Random(1);

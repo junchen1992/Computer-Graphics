@@ -21,6 +21,7 @@ public abstract class Line {
 	abstract void line(BufferedImage buf, int x0, int y0, int xn, int yn,
 			int rgb);
 
+	@SuppressWarnings("unused")
 	public static void main(String[] args) throws InterruptedException {
 		JFrame jframe;
 		final BufferedImage offscreen1, offscreen2;
@@ -35,6 +36,11 @@ public abstract class Line {
 				BufferedImage.TYPE_INT_RGB);
 		JPanel mainpanel = new JPanel();
 		canvas1 = new JComponent() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			public void paint(Graphics g) {
 				g.drawImage(offscreen1, 0, 0, null);
 			}
@@ -42,6 +48,11 @@ public abstract class Line {
 		canvas1.setSize(dim);
 		canvas1.setPreferredSize(dim);
 		canvas2 = new JComponent() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			public void paint(Graphics g) {
 				g.drawImage(offscreen2, 0, 0, null);
 			}
@@ -86,7 +97,7 @@ public abstract class Line {
 				// You may assume that the points are within the buffer.
 				// To set a pixel at location (x,y) to color rgb just use
 				// buf.setRGB(x,y,rgb);
-				
+
 				int dx = xn - x0;
 				int dy = yn - y0;
 				float x = x0;
@@ -100,150 +111,151 @@ public abstract class Line {
 					y += yinc;
 					buf.setRGB(Math.round(x), Math.round(y), rgb);
 				}
-				
+
 			}
 		};
-		
-		// Step 2: Re-implement your line drawing algorithm using the Bresenham approach.
-		
-		
+
+		// Step 2: Re-implement your line drawing algorithm using the Bresenham
+		// approach.
+
 		Line line = new Line() {
 			@Override
 			void line(BufferedImage buf, int x0, int y0, int xn, int yn, int rgb) {
 				int dx = xn - x0;
-                int dy = yn - y0;
-                
-                // (1) slope = 0 (horizontal line):
-                if (dy == 0) {
-                    for (int x = Math.min(x0, xn); x <= Math.max(x0, xn); x++) {
-                        buf.setRGB(x, y0, rgb);
-                    }
-                } 
-                
-                // (2) slope = infinity (vertical line):
-                else if (dx == 0) {
-                    for(int y = Math.min(y0, yn); y <= Math.max(y0, yn); y++) {
-                        buf.setRGB(x0, y, rgb);
-                    }
-                }
-                
-                // (3) 0 < slope <= 1:
-                else if ( (dy * dx > 0) && ((dy * 1.0) / dx <= 1)) {               	              	
-                    if (x0 > xn) {
-                        // swap(x0, xn);
-                    	int xt = x0;
-                    	x0 = xn;
-                    	xn = xt;
-                        // swap(y0, yn);
-                    	int yt = y0;
-                    	y0 = yn;
-                    	yn = yt;
-                        dx = -dx;
-                        dy = -dy;
-                    }                                       
-                    int x = x0, y = y0;
-                    int D = (dy << 1) - dx;
-                    buf.setRGB(x, y, rgb);
-                    while ( x < xn ) {
-                    	x++;
-                    	if (D < 0) {
-                    		D += (dy << 1);
-                    	} else {
-                    		y++;
-                    		D += ((dy - dx) << 1);
-                    	}
-                    	buf.setRGB(x, y, rgb);
-                    }
-                }   
-                
-                // (4) -1 <= slope < 0:
-                else if ( ((dy * 1.0) / dx >= -1) && (dy * dx < 0) ) {            	
-                    if (x0 > xn) {
-                    	// swap(x0, xn);
-                    	int xt = x0;
-                    	x0 = xn;
-                    	xn = xt;
-                        // swap(y0, yn);
-                    	int yt = y0;
-                    	y0 = yn;
-                    	yn = yt;
-                        dx = -dx;
-                        dy = -dy;
-                    }                                        
-                    int x = x0, y = y0;
-                    int D = (dy << 1) + dx;
-                    buf.setRGB(x, y, rgb);
-                    while ( x < xn ) {
-                    	x++;
-                    	if (D < 0) {
-                    		y--;
-                    		D += (dx + dy) << 1;
-                    	} else {
-                    		D += (dy << 1);
-                    	}
-                    	buf.setRGB(x, y, rgb);
-                    }
-                }
-                
-                // (5) 1 < slope < +infinity:
-                else if ( (dy * 1.0) / dx > 1 ) {
-                	if (x0 > xn) {
-                		// swap(x0, xn);
-                    	int xt = x0;
-                    	x0 = xn;
-                    	xn = xt;
-                        // swap(y0, yn);
-                    	int yt = y0;
-                    	y0 = yn;
-                    	yn = yt;
-                        dx = -dx;
-                        dy = -dy;
-                    }
-                	//System.out.println(x0 + ", " + y0 + "   ->   " + xn + ", " + yn + " : " + (1.0 * dy / dx));
-                    int x = x0, y = y0;
-                    int D = dy - (dx << 1);
-                    buf.setRGB(x, y, rgb);
-                    while ( y < yn ) {
-                    	y++;
-                    	if (D > 0) {
-                    		D -= (dx << 1);
-                    	} else {
-                    		x++;
-                    		D += ((dy - dx) << 1);
-                    	}
-                    	buf.setRGB(x, y, rgb);
-                    }
-                }
-                
-                // (6) -infinity < slope < -1:
-                else {               	
-                	if (y0 > yn) {
-                		// swap(x0, xn);
-                    	int xt = x0;
-                    	x0 = xn;
-                    	xn = xt;
-                        // swap(y0, yn);
-                    	int yt = y0;
-                    	y0 = yn;
-                    	yn = yt;
-                        dx = -dx;
-                        dy = -dy;
-                    }
-                    int x = x0, y = y0;
-                    int D = -dy - (dx << 1);
-                    buf.setRGB(x, y, rgb);
-                    while (y < yn) {
-                    	y++;
-                    	if (D < 0) {
-                    		D -= (dx << 1);
-                    	} else {
-                    		x--;
-                    		D -= ((dx + dy) << 1);
-                    	}
-                    	buf.setRGB(x, y, rgb);
-                    }
-                }
-                
+				int dy = yn - y0;
+
+				// (1) slope = 0 (horizontal line):
+				if (dy == 0) {
+					for (int x = Math.min(x0, xn); x <= Math.max(x0, xn); x++) {
+						buf.setRGB(x, y0, rgb);
+					}
+				}
+
+				// (2) slope = infinity (vertical line):
+				else if (dx == 0) {
+					for (int y = Math.min(y0, yn); y <= Math.max(y0, yn); y++) {
+						buf.setRGB(x0, y, rgb);
+					}
+				}
+
+				// (3) 0 < slope <= 1:
+				else if ((dy * dx > 0) && ((dy * 1.0) / dx <= 1)) {
+					if (x0 > xn) {
+						// swap(x0, xn);
+						int xt = x0;
+						x0 = xn;
+						xn = xt;
+						// swap(y0, yn);
+						int yt = y0;
+						y0 = yn;
+						yn = yt;
+						dx = -dx;
+						dy = -dy;
+					}
+					int x = x0, y = y0;
+					int D = (dy << 1) - dx;
+					buf.setRGB(x, y, rgb);
+					while (x < xn) {
+						x++;
+						if (D < 0) {
+							D += (dy << 1);
+						} else {
+							y++;
+							D += ((dy - dx) << 1);
+						}
+						buf.setRGB(x, y, rgb);
+					}
+				}
+
+				// (4) -1 <= slope < 0:
+				else if (((dy * 1.0) / dx >= -1) && (dy * dx < 0)) {
+					if (x0 > xn) {
+						// swap(x0, xn);
+						int xt = x0;
+						x0 = xn;
+						xn = xt;
+						// swap(y0, yn);
+						int yt = y0;
+						y0 = yn;
+						yn = yt;
+						dx = -dx;
+						dy = -dy;
+					}
+					int x = x0, y = y0;
+					int D = (dy << 1) + dx;
+					buf.setRGB(x, y, rgb);
+					while (x < xn) {
+						x++;
+						if (D < 0) {
+							y--;
+							D += (dx + dy) << 1;
+						} else {
+							D += (dy << 1);
+						}
+						buf.setRGB(x, y, rgb);
+					}
+				}
+
+				// (5) 1 < slope < +infinity:
+				else if ((dy * 1.0) / dx > 1) {
+					if (x0 > xn) {
+						// swap(x0, xn);
+						int xt = x0;
+						x0 = xn;
+						xn = xt;
+						// swap(y0, yn);
+						int yt = y0;
+						y0 = yn;
+						yn = yt;
+						dx = -dx;
+						dy = -dy;
+					}
+					// System.out.println(x0 + ", " + y0 + "   ->   " + xn +
+					// ", " + yn + " : " + (1.0 * dy / dx));
+					int x = x0, y = y0;
+					int D = dy - (dx << 1);
+					buf.setRGB(x, y, rgb);
+					while (y < yn) {
+						y++;
+						if (D > 0) {
+							D -= (dx << 1);
+						} else {
+							x++;
+							D += ((dy - dx) << 1);
+						}
+						buf.setRGB(x, y, rgb);
+					}
+				}
+
+				// (6) -infinity < slope < -1:
+				else {
+					if (y0 > yn) {
+						// swap(x0, xn);
+						int xt = x0;
+						x0 = xn;
+						xn = xt;
+						// swap(y0, yn);
+						int yt = y0;
+						y0 = yn;
+						yn = yt;
+						dx = -dx;
+						dy = -dy;
+					}
+					int x = x0, y = y0;
+					int D = -dy - (dx << 1);
+					buf.setRGB(x, y, rgb);
+					while (y < yn) {
+						y++;
+						if (D < 0) {
+							D -= (dx << 1);
+						} else {
+							x--;
+							D -= ((dx + dy) << 1);
+						}
+						buf.setRGB(x, y, rgb);
+					}
+				}
+
 			}
 		};
 
@@ -265,9 +277,10 @@ public abstract class Line {
 		speedtest(line);
 		System.out.println("Speed of line     : " + speedtest(line));
 	}
-	
+
 	/**
 	 * Swap the values of two integers a and b.
+	 * 
 	 * @param a
 	 * @param b
 	 */
@@ -311,23 +324,23 @@ public abstract class Line {
 		int green = (new Color(0.0f, 1.0f, 0.0f)).getRGB();
 
 		for (double t = 0.0; t < Math.PI * 2.0; t += Math.PI / 16.0) {
-			lr.line(buf, 100 + (int) (Math.sin(t) * 15.0), 100 + (int) (Math
-					.cos(t) * 15.0), 100 + (int) (Math.sin(t) * 85.0),
+			lr.line(buf, 100 + (int) (Math.sin(t) * 15.0),
+					100 + (int) (Math.cos(t) * 15.0),
+					100 + (int) (Math.sin(t) * 85.0),
 					100 + (int) (Math.cos(t) * 85.0), red);
 		}
-		
+
 		Random r = new Random(1);
-		for (int i=0;i<1000;i++) {
-			int x = r.nextInt(buf.getWidth()-41)+20;
-			int y = r.nextInt(buf.getHeight()/2)+buf.getHeight()/2 -20;
-			int dx = r.nextInt(41)-20;
-			int dy = r.nextInt(41)-20;
-			lr.line(buf,x,y,x+dx,y+dy,green);
+		for (int i = 0; i < 1000; i++) {
+			int x = r.nextInt(buf.getWidth() - 41) + 20;
+			int y = r.nextInt(buf.getHeight() / 2) + buf.getHeight() / 2 - 20;
+			int dx = r.nextInt(41) - 20;
+			int dy = r.nextInt(41) - 20;
+			lr.line(buf, x, y, x + dx, y + dy, green);
 		}
-		
-		
-		//lr.line(buf, 0, 0, 10, 100, rgb);
-		
+
+		// lr.line(buf, 0, 0, 10, 100, rgb);
+
 		lr.line(buf, 356, 118, 355, 116, rgb);
 		lr.line(buf, 355, 116, 354, 116, rgb);
 		lr.line(buf, 354, 116, 354, 116, rgb);
