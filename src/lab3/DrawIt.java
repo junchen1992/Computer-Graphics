@@ -12,6 +12,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 /*
@@ -29,6 +30,7 @@ public class DrawIt implements Runnable {
 	JMenu jmfile;
 	JMenuItem jmiquit, jmiexport;
 	ToolBar colorToolbar;
+	ToolBar optionToolbar;
 
 	public DrawIt() {
 		SwingUtilities.invokeLater(this);
@@ -46,17 +48,30 @@ public class DrawIt implements Runnable {
 		colorToolbar.addbutton("Red", Color.RED);
 		colorToolbar.addbutton("Blue", Color.BLUE);
 		colorToolbar.addbutton("Green", Color.GREEN);
+		colorToolbar.addbutton("Eraser", Color.WHITE);
 
 		colorToolbar.addLabel("Thickness", "1.0", "THICKNESS");
 		colorToolbar.addJButton("+", "INCTHICKNESS");
 		colorToolbar.addJButton("-", "DECTHICKNESS");
-		// colorToolbar.addTextField("hello", null);
 		colorToolbar.addLabel("Transparency", "100%", "TRANSPARENCY");
 		colorToolbar.addJButton("+", "INCTRANSPARENCY");
 		colorToolbar.addJButton("-", "DECTRANSPARENCY");
-		// colorToolbar.addTextField("world", null);
 
-		jf.getContentPane().add(colorToolbar, BorderLayout.LINE_END);
+		// create another toolbar:
+		optionToolbar = new ToolBar(BoxLayout.Y_AXIS);
+		// a placeholder does nothing:
+		optionToolbar.addbutton("Line", "Line");
+		optionToolbar.addbutton("Smudge", "Smudge");
+		optionToolbar.addbutton("Spray", "SPRAY");
+		optionToolbar.addbutton("Flood Fill", "FLOODFILL");
+
+		JPanel jp = new JPanel();
+		jp.setLayout(new BoxLayout(jp, BoxLayout.Y_AXIS));
+		jp.add(colorToolbar);
+		jp.add(optionToolbar);
+
+		// jf.getContentPane().add(colorToolbar, BorderLayout.LINE_END);
+		jf.getContentPane().add(jp, BorderLayout.LINE_END);
 
 		// create some menus
 		bar = new JMenuBar();

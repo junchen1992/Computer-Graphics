@@ -5,12 +5,14 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Random;
 
 import javax.imageio.ImageIO;
 import javax.swing.JComponent;
@@ -21,7 +23,8 @@ import javax.swing.JComponent;
  * Eric McCreath 2009 2015
  */
 
-public class DrawArea extends JComponent implements MouseMotionListener, MouseListener {
+public class DrawArea extends JComponent implements MouseMotionListener,
+		MouseListener {
 
 	private static final long serialVersionUID = 1L;
 	private BufferedImage offscreen;
@@ -33,7 +36,8 @@ public class DrawArea extends JComponent implements MouseMotionListener, MouseLi
 
 	public DrawArea(Dimension dim, DrawIt drawit) {
 		this.setPreferredSize(dim);
-		offscreen = new BufferedImage(dim.width, dim.height, BufferedImage.TYPE_INT_RGB);
+		offscreen = new BufferedImage(dim.width, dim.height,
+				BufferedImage.TYPE_INT_RGB);
 		this.dim = dim;
 		this.drawit = drawit;
 		this.addMouseMotionListener(this);
@@ -49,8 +53,10 @@ public class DrawArea extends JComponent implements MouseMotionListener, MouseLi
 
 		// set initial thickness and transparency of the line:
 		if (this.drawit.colorToolbar != null) {
-			g.setStroke(new BasicStroke((float) this.drawit.colorToolbar.getThickness()));
-			g.setColor(new Color(1, 0, 0, (float) (this.drawit.colorToolbar.getTransparency() * 1.0 / 100)));
+			g.setStroke(new BasicStroke((float) this.drawit.colorToolbar
+					.getThickness()));
+			g.setColor(new Color(1, 0, 0, (float) (this.drawit.colorToolbar
+					.getTransparency() * 1.0 / 100)));
 		}
 
 		repaint();
@@ -79,24 +85,107 @@ public class DrawArea extends JComponent implements MouseMotionListener, MouseLi
 		// 2.0));
 
 		// change thickness of the line:
-		g.setStroke(new BasicStroke((float) this.drawit.colorToolbar.getThickness()));
+		g.setStroke(new BasicStroke((float) this.drawit.colorToolbar
+				.getThickness()));
+
 		// change transparency of the line:
 		Color color = (Color) drawit.colorToolbar.getSelectCommand();
-		Color newColor = Color.RED;
+
+		// set the default color to white indicates an eraser:
+		Color newColor = Color.WHITE;
+		int rgb = 0;
+
+		// color options:
 		if (color.equals(Color.RED)) {
-			newColor = new Color(1, 0, 0, (float) (this.drawit.colorToolbar.getTransparency() * 1.0 / 100));
+			newColor = new Color(
+					1,
+					0,
+					0,
+					(float) (this.drawit.colorToolbar.getTransparency() * 1.0 / 100));
+			rgb = Color.RED.getRed();
 		} else if (color.equals(Color.GREEN)) {
-			newColor = new Color(0, 1, 0, (float) (this.drawit.colorToolbar.getTransparency() * 1.0 / 100));
+			newColor = new Color(
+					0,
+					1,
+					0,
+					(float) (this.drawit.colorToolbar.getTransparency() * 1.0 / 100));
+			rgb = Color.GREEN.getGreen();
 		} else if (color.equals(Color.BLUE)) {
-			newColor = new Color(0, 0, 1, (float) (this.drawit.colorToolbar.getTransparency() * 1.0 / 100));
+			newColor = new Color(
+					0,
+					0,
+					1,
+					(float) (this.drawit.colorToolbar.getTransparency() * 1.0 / 100));
+			rgb = Color.BLUE.getBlue();
 		}
 
+		// set transparency:
 		g.setColor(newColor);
 
-		g.drawLine(x, y, m.getX(), m.getY());
+		// function options:
+		if (((String) drawit.optionToolbar.getSelectCommand()).equals("SPRAY")) {
+			spray(g, m.getX(), m.getY());
+		} else if (((String) drawit.optionToolbar.getSelectCommand())
+				.equals("FLOODFILL")) {
+			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+					RenderingHints.VALUE_ANTIALIAS_ON);
+			floodFill(g, m.getX(), m.getY());
+		} else {
+			g.drawLine(x, y, m.getX(), m.getY());
+		}
+
 		x = m.getX();
 		y = m.getY();
 		drawOffscreen();
+	}
+
+	/**
+	 * spray paint at point (x, y).
+	 */
+	public void spray(Graphics2D g, int x, int y) {
+		// sample using RNG:
+		Random random = new Random();
+
+		// inner:
+		int innerPoints = 35;
+		int innerBound = 5;
+		int xRng1 = 0, yRng1 = 0;
+		for (int i = 0; i < innerPoints; i++) {
+			xRng1 = x + random.nextInt(innerBound);
+			yRng1 = y + random.nextInt(innerBound);
+			g.drawLine(xRng1, yRng1, xRng1, yRng1);
+		}
+
+		// outer:
+		int outerPoints = 12;
+		int outerBound = 10;
+		int xRng2 = 0, yRng2 = 0;
+		for (int j = 0; j < outerPoints; j++) {
+			xRng2 = x + random.nextInt(outerBound);
+			yRng2 = y + random.nextInt(outerBound);
+			g.drawLine(xRng2, yRng2, xRng2, yRng2);
+		}
+	}
+
+	/**
+	 * area flood fill in a selected area specified by a given point.
+	 * 
+	 * @param g
+	 */
+	public void floodFill(Graphics2D g, int x, int y) {
+		g.drawLine(x, y, x, y);
+		if (this.offscreen.getRGB(x + 1, y) == -1) {
+			floodFill(g, x + 1, y);
+		}
+		if (this.offscreen.getRGB(x - 1, y) == -1) {
+			floodFill(g, x - 1, y);
+		}
+		if (this.offscreen.getRGB(x, y + 1) == -1) {
+			floodFill(g, x, y + 1);
+		}
+		if (this.offscreen.getRGB(x, y - 1) == -1) {
+			floodFill(g, x, y - 1);
+		}
 	}
 
 	public void mouseMoved(MouseEvent m) {

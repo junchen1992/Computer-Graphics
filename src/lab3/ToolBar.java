@@ -83,7 +83,8 @@ public class ToolBar extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent arg0) {
 		if (arg0.getActionCommand().equalsIgnoreCase("INCTHICKNESS")) {
 			JLabel label = map.get("THICKNESS");
-			double thickness = Double.parseDouble(label.getText().split(":")[1].trim()) + 1.0;
+			double thickness = Double.parseDouble(label.getText().split(":")[1]
+					.trim()) + 1.0;
 			if (thickness <= 0) {
 				thickness = 1;
 			}
@@ -93,7 +94,8 @@ public class ToolBar extends JPanel implements ActionListener {
 			label.setText(label.getText().split(":")[0] + ": " + thickness);
 		} else if (arg0.getActionCommand().equalsIgnoreCase("DECTHICKNESS")) {
 			JLabel label = map.get("THICKNESS");
-			double thickness = Double.parseDouble(label.getText().split(":")[1].trim()) - 1.0;
+			double thickness = Double.parseDouble(label.getText().split(":")[1]
+					.trim()) - 1.0;
 			if (thickness <= 0) {
 				thickness = 1;
 			}
@@ -103,22 +105,26 @@ public class ToolBar extends JPanel implements ActionListener {
 			label.setText(label.getText().split(":")[0] + ": " + thickness);
 		} else if (arg0.getActionCommand().equalsIgnoreCase("INCTRANSPARENCY")) {
 			JLabel label = map.get("TRANSPARENCY");
-			int transparency = Integer.parseInt(label.getText().split(":")[1].replace("%", "").trim()) + 10;
+			int transparency = Integer.parseInt(label.getText().split(":")[1]
+					.replace("%", "").trim()) + 10;
 			if (transparency < 0) {
 				transparency = 0;
 			} else if (transparency > 100) {
 				transparency = 100;
 			}
-			label.setText(label.getText().split(":")[0] + ": " + transparency + "%");
+			label.setText(label.getText().split(":")[0] + ": " + transparency
+					+ "%");
 		} else if (arg0.getActionCommand().equalsIgnoreCase("DECTRANSPARENCY")) {
 			JLabel label = map.get("TRANSPARENCY");
-			int transparency = Integer.parseInt(label.getText().split(":")[1].replace("%", "").trim()) - 10;
+			int transparency = Integer.parseInt(label.getText().split(":")[1]
+					.replace("%", "").trim()) - 10;
 			if (transparency < 0) {
 				transparency = 0;
 			} else if (transparency > 100) {
 				transparency = 100;
 			}
-			label.setText(label.getText().split(":")[0] + ": " + transparency + "%");
+			label.setText(label.getText().split(":")[0] + ": " + transparency
+					+ "%");
 		}
 
 		for (Observer o : observers)
@@ -146,12 +152,18 @@ public class ToolBar extends JPanel implements ActionListener {
 	 * @return the currently chosen thickness.
 	 */
 	public double getThickness() {
-		double thickness = Double.parseDouble(map.get("THICKNESS").getText().split(":")[1].trim());
+		double thickness = Double.parseDouble(map.get("THICKNESS").getText()
+				.split(":")[1].trim());
 		return thickness;
 	}
 
+	/**
+	 * 
+	 * @return the currently chosen transparency.
+	 */
 	public int getTransparency() {
-		int transparency = Integer.parseInt(map.get("TRANSPARENCY").getText().split(":")[1].replace("%", "").trim());
+		int transparency = Integer.parseInt(map.get("TRANSPARENCY").getText()
+				.split(":")[1].replace("%", "").trim());
 		return transparency;
 	}
 }
