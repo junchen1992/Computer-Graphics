@@ -46,6 +46,16 @@ public class DrawIt implements Runnable {
 		colorToolbar.addbutton("Red", Color.RED);
 		colorToolbar.addbutton("Blue", Color.BLUE);
 		colorToolbar.addbutton("Green", Color.GREEN);
+
+		colorToolbar.addLabel("Thickness", "1.0", "THICKNESS");
+		colorToolbar.addJButton("+", "INCTHICKNESS");
+		colorToolbar.addJButton("-", "DECTHICKNESS");
+		// colorToolbar.addTextField("hello", null);
+		colorToolbar.addLabel("Transparency", "100%", "TRANSPARENCY");
+		colorToolbar.addJButton("+", "INCTRANSPARENCY");
+		colorToolbar.addJButton("-", "DECTRANSPARENCY");
+		// colorToolbar.addTextField("world", null);
+
 		jf.getContentPane().add(colorToolbar, BorderLayout.LINE_END);
 
 		// create some menus

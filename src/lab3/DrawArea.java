@@ -1,5 +1,6 @@
 package lab3;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -20,8 +21,7 @@ import javax.swing.JComponent;
  * Eric McCreath 2009 2015
  */
 
-public class DrawArea extends JComponent implements MouseMotionListener,
-		MouseListener {
+public class DrawArea extends JComponent implements MouseMotionListener, MouseListener {
 
 	private static final long serialVersionUID = 1L;
 	private BufferedImage offscreen;
@@ -33,8 +33,7 @@ public class DrawArea extends JComponent implements MouseMotionListener,
 
 	public DrawArea(Dimension dim, DrawIt drawit) {
 		this.setPreferredSize(dim);
-		offscreen = new BufferedImage(dim.width, dim.height,
-				BufferedImage.TYPE_INT_RGB);
+		offscreen = new BufferedImage(dim.width, dim.height, BufferedImage.TYPE_INT_RGB);
 		this.dim = dim;
 		this.drawit = drawit;
 		this.addMouseMotionListener(this);
@@ -47,6 +46,13 @@ public class DrawArea extends JComponent implements MouseMotionListener,
 		Graphics2D g = offscreen.createGraphics();
 		g.setColor(Color.white);
 		g.fillRect(0, 0, dim.width, dim.height);
+
+		// set initial thickness and transparency of the line:
+		if (this.drawit.colorToolbar != null) {
+			g.setStroke(new BasicStroke((float) this.drawit.colorToolbar.getThickness()));
+			g.setColor(new Color(1, 0, 0, (float) (this.drawit.colorToolbar.getTransparency() * 1.0 / 100)));
+		}
+
 		repaint();
 	}
 
@@ -71,6 +77,22 @@ public class DrawArea extends JComponent implements MouseMotionListener,
 
 		// g.fill(new Ellipse2D.Double(m.getX() - 1.0, m.getY() - 1.0, 2.0,
 		// 2.0));
+
+		// change thickness of the line:
+		g.setStroke(new BasicStroke((float) this.drawit.colorToolbar.getThickness()));
+		// change transparency of the line:
+		Color color = (Color) drawit.colorToolbar.getSelectCommand();
+		Color newColor = Color.RED;
+		if (color.equals(Color.RED)) {
+			newColor = new Color(1, 0, 0, (float) (this.drawit.colorToolbar.getTransparency() * 1.0 / 100));
+		} else if (color.equals(Color.GREEN)) {
+			newColor = new Color(0, 1, 0, (float) (this.drawit.colorToolbar.getTransparency() * 1.0 / 100));
+		} else if (color.equals(Color.BLUE)) {
+			newColor = new Color(0, 0, 1, (float) (this.drawit.colorToolbar.getTransparency() * 1.0 / 100));
+		}
+
+		g.setColor(newColor);
+
 		g.drawLine(x, y, m.getX(), m.getY());
 		x = m.getX();
 		y = m.getY();
