@@ -1,5 +1,8 @@
 package vectordrawing;
 
+import java.awt.Color;
+import java.awt.Stroke;
+
 public class Line {
 
 	private int x0;
@@ -7,12 +10,21 @@ public class Line {
 	private int xn;
 	private int yn;
 
-	public Line(int x0, int y0, int xn, int yn) {
+	private Color color;
+	private Stroke stroke;
+
+	public Line() {
+
+	}
+
+	public Line(int x0, int y0, int xn, int yn, Color c, Stroke s) {
 		super();
 		this.x0 = x0;
 		this.y0 = y0;
 		this.xn = xn;
 		this.yn = yn;
+		this.color = c;
+		this.stroke = s;
 	}
 
 	public int getX0() {
@@ -47,8 +59,20 @@ public class Line {
 		this.yn = yn;
 	}
 
-	public Line() {
+	public Color getColor() {
+		return color;
+	}
 
+	public void setColor(Color color) {
+		this.color = color;
+	}
+
+	public Stroke getStroke() {
+		return stroke;
+	}
+
+	public void setStroke(Stroke stroke) {
+		this.stroke = stroke;
 	}
 
 }

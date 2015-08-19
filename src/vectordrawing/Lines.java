@@ -1,5 +1,7 @@
 package vectordrawing;
 
+import java.awt.Color;
+import java.awt.Stroke;
 import java.util.ArrayList;
 
 public class Lines {
@@ -11,8 +13,8 @@ public class Lines {
 		this.lines = new ArrayList<Line>();
 	}
 
-	public void addLine(int x0, int y0, int xn, int yn) {
-		Line line = new Line(x0, y0, xn, yn);
+	public void addLine(int x0, int y0, int xn, int yn, Color c, Stroke s) {
+		Line line = new Line(x0, y0, xn, yn, c, s);
 		lines.add(line);
 	}
 

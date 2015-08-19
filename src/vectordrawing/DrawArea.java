@@ -132,11 +132,13 @@ public class DrawArea extends JComponent implements MouseMotionListener,
 		if (lines.getLines().size() == this.linesCount + 1) {
 			lines.deleteLastLine();
 		}
-		lines.addLine(x, y, xn, yn);
+		lines.addLine(x, y, xn, yn, g.getColor(), g.getStroke());
 
 		Line line = null;
 		for (int i = 0; i < lines.getLines().size(); i++) {
 			line = lines.getLines().get(i);
+			g.setColor(line.getColor());
+			g.setStroke(line.getStroke());
 			g.drawLine(line.getX0(), line.getY0(), line.getXn(), line.getYn());
 		}
 
