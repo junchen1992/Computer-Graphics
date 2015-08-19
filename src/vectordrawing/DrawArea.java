@@ -9,6 +9,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Line2D;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -38,6 +39,8 @@ public class DrawArea extends JComponent implements MouseMotionListener,
 
 	// last starting point:
 	private int x = -1, y = -1;
+	// pos to be cleared:
+	int xClear = 0, yClear = 0;
 
 	public DrawArea(Dimension dim, DrawIt drawit) {
 		this.setPreferredSize(dim);
@@ -88,17 +91,39 @@ public class DrawArea extends JComponent implements MouseMotionListener,
 	public void mouseDragged(MouseEvent m) {
 		// do not draw new line when in editing-line mode:
 		if (drawit.colorToolbar.isEditingMode()) {
-			// add move boxes to the ends of the line:
+			if (this.selectedLine == null) {
+				return;
+			}
 
-			return;
+			System.out.println("a line selected");
+			/*
+			 * double dist1 = Point2D.distance(this.selectedLine.getX0(),
+			 * this.selectedLine.getY0(), m.getX(), m.getY()); double dist2 =
+			 * Point2D.distance(this.selectedLine.getXn(),
+			 * this.selectedLine.getYn(), m.getX(), m.getY()); if (dist1 <
+			 * dist2) { this.x = this.selectedLine.getXn(); this.y =
+			 * this.selectedLine.getYn(); } else { this.x =
+			 * this.selectedLine.getX0(); this.y = this.selectedLine.getY0(); }
+			 */
+			lines.deleteLastLine();
+
 		}
 
-		this.selectedLine = null;
+		// this.selectedLine = null;
+
 		// clear the current screen:
 		this.clearOffscreen();
 
 		Graphics2D g = offscreen.createGraphics();
 		g.setColor((Color) drawit.colorToolbar.getSelectCommand());
+
+		// add move boxes to the ends of the line:
+		if (drawit.colorToolbar.isEditingMode() && this.selectedLine != null) {
+			g.drawRect(this.selectedLine.getX0() - 5,
+					this.selectedLine.getY0() - 5, 10, 10);
+			g.drawRect(this.selectedLine.getXn() - 5,
+					this.selectedLine.getYn() - 5, 10, 10);
+		}
 
 		// g.fill(new Ellipse2D.Double(m.getX() - 1.0, m.getY() - 1.0, 2.0,
 		// 2.0));
@@ -142,7 +167,19 @@ public class DrawArea extends JComponent implements MouseMotionListener,
 		if (lines.getLines().size() == this.linesCount + 1) {
 			lines.deleteLastLine();
 		}
-		lines.addLine(x, y, xn, yn, g.getColor(), g.getStroke());
+
+		if (drawit.colorToolbar.isEditingMode() && this.selectedLine != null) {
+			lines.addLine(x, y, xn, yn, this.selectedLine.getColor(),
+					this.selectedLine.getStroke());
+		} else {
+			lines.addLine(x, y, xn, yn, g.getColor(), g.getStroke());
+		}
+
+		// clear previous move boxes:
+		Color bg = g.getBackground();
+		g.setBackground(Color.WHITE);
+		g.clearRect(xClear - 6, yClear - 6, 12, 12);
+		g.setBackground(bg);
 
 		Line line = null;
 		for (int i = 0; i < lines.getLines().size(); i++) {
@@ -150,6 +187,11 @@ public class DrawArea extends JComponent implements MouseMotionListener,
 			g.setColor(line.getColor());
 			g.setStroke(line.getStroke());
 			g.drawLine(line.getX0(), line.getY0(), line.getXn(), line.getYn());
+		}
+
+		if (drawit.colorToolbar.isEditingMode() && this.selectedLine != null) {
+			// g.clearRect(this.x, this.y, 4, 4);
+			g.drawRect(m.getX() - 5, m.getY() - 5, 10, 10);
 		}
 
 		drawOffscreen();
@@ -235,15 +277,60 @@ public class DrawArea extends JComponent implements MouseMotionListener,
 		this.isDragging = true;
 		if (drawit.colorToolbar.isEditingMode()) {
 			Line nearestLine = lines.nearestLine(x, y);
-			double dist = Line2D.ptLineDistSq(nearestLine.getX0(),
+			double dist = Line2D.ptLineDist(nearestLine.getX0(),
 					nearestLine.getY0(), nearestLine.getXn(),
 					nearestLine.getYn(), x, y);
-			if (dist < 3) {
+			System.out.println("dist = " + dist);
+			double threshold = 7.0;
+			if (dist < threshold) {
 				this.selectedLine = nearestLine;
 				lines.getLines().remove(nearestLine);
 				lines.getLines().add(nearestLine);
 
+				double dist1 = Point2D.distance(this.selectedLine.getX0(),
+						this.selectedLine.getY0(), e.getX(), e.getY());
+				double dist2 = Point2D.distance(this.selectedLine.getXn(),
+						this.selectedLine.getYn(), e.getX(), e.getY());
+				if (dist1 < dist2) {
+					this.x = this.selectedLine.getXn();
+					this.y = this.selectedLine.getYn();
+					this.xClear = this.selectedLine.getX0();
+					this.yClear = this.selectedLine.getY0();
+				} else {
+					this.x = this.selectedLine.getX0();
+					this.y = this.selectedLine.getY0();
+					this.xClear = this.selectedLine.getXn();
+					this.yClear = this.selectedLine.getYn();
+				}
+
+				Graphics2D g = offscreen.createGraphics();
+
+				// clear previous move boxes:
+				Color bg = g.getBackground();
+				g.setBackground(Color.WHITE);
+				Line line = null;
+				for (int i = 0; i < lines.getLines().size(); i++) {
+					line = lines.getLines().get(i);
+					g.clearRect(line.getX0() - 6, line.getY0() - 6, 12, 12);
+					g.clearRect(line.getXn() - 6, line.getYn() - 6, 12, 12);
+				}
+				g.setBackground(bg);
+
+				// add move boxes:
+
+				g.setColor(this.selectedLine.getColor());
+				g.drawRect(this.selectedLine.getX0() - 5,
+						this.selectedLine.getY0() - 5, 10, 10);
+				g.drawRect(this.selectedLine.getXn() - 5,
+						this.selectedLine.getYn() - 5, 10, 10);
+
+				drawOffscreen();
+
+			} else {
+				this.selectedLine = null;
 			}
+		} else {
+			this.selectedLine = null;
 		}
 	}
 
@@ -253,7 +340,9 @@ public class DrawArea extends JComponent implements MouseMotionListener,
 	public void mouseReleased(MouseEvent e) {
 		this.x = -1;
 		this.y = -1;
-		this.linesCount++;
+		if (!drawit.colorToolbar.isEditingMode()) {
+			this.linesCount++;
+		}
 		this.isDragging = false;
 	}
 
