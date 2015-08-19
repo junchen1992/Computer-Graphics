@@ -23,8 +23,7 @@ import javax.swing.JComponent;
  * Eric McCreath 2009 2015
  */
 
-public class DrawArea extends JComponent implements MouseMotionListener,
-		MouseListener {
+public class DrawArea extends JComponent implements MouseMotionListener, MouseListener {
 
 	private static final long serialVersionUID = 1L;
 	private BufferedImage offscreen;
@@ -36,8 +35,7 @@ public class DrawArea extends JComponent implements MouseMotionListener,
 
 	public DrawArea(Dimension dim, DrawIt drawit) {
 		this.setPreferredSize(dim);
-		offscreen = new BufferedImage(dim.width, dim.height,
-				BufferedImage.TYPE_INT_RGB);
+		offscreen = new BufferedImage(dim.width, dim.height, BufferedImage.TYPE_INT_RGB);
 		this.dim = dim;
 		this.drawit = drawit;
 		this.addMouseMotionListener(this);
@@ -53,10 +51,8 @@ public class DrawArea extends JComponent implements MouseMotionListener,
 
 		// set initial thickness and transparency of the line:
 		if (this.drawit.colorToolbar != null) {
-			g.setStroke(new BasicStroke((float) this.drawit.colorToolbar
-					.getThickness()));
-			g.setColor(new Color(1, 0, 0, (float) (this.drawit.colorToolbar
-					.getTransparency() * 1.0 / 100)));
+			g.setStroke(new BasicStroke((float) this.drawit.colorToolbar.getThickness()));
+			g.setColor(new Color(1, 0, 0, (float) (this.drawit.colorToolbar.getTransparency() * 1.0 / 100)));
 		}
 
 		repaint();
@@ -85,38 +81,20 @@ public class DrawArea extends JComponent implements MouseMotionListener,
 		// 2.0));
 
 		// change thickness of the line:
-		g.setStroke(new BasicStroke((float) this.drawit.colorToolbar
-				.getThickness()));
+		g.setStroke(new BasicStroke((float) this.drawit.colorToolbar.getThickness()));
 
 		// change transparency of the line:
 		Color color = (Color) drawit.colorToolbar.getSelectCommand();
 
 		// set the default color to white indicates an eraser:
 		Color newColor = Color.WHITE;
-		int rgb = 0;
-
 		// color options:
 		if (color.equals(Color.RED)) {
-			newColor = new Color(
-					1,
-					0,
-					0,
-					(float) (this.drawit.colorToolbar.getTransparency() * 1.0 / 100));
-			rgb = Color.RED.getRed();
+			newColor = new Color(1, 0, 0, (float) (this.drawit.colorToolbar.getTransparency() * 1.0 / 100));
 		} else if (color.equals(Color.GREEN)) {
-			newColor = new Color(
-					0,
-					1,
-					0,
-					(float) (this.drawit.colorToolbar.getTransparency() * 1.0 / 100));
-			rgb = Color.GREEN.getGreen();
+			newColor = new Color(0, 1, 0, (float) (this.drawit.colorToolbar.getTransparency() * 1.0 / 100));
 		} else if (color.equals(Color.BLUE)) {
-			newColor = new Color(
-					0,
-					0,
-					1,
-					(float) (this.drawit.colorToolbar.getTransparency() * 1.0 / 100));
-			rgb = Color.BLUE.getBlue();
+			newColor = new Color(0, 0, 1, (float) (this.drawit.colorToolbar.getTransparency() * 1.0 / 100));
 		}
 
 		// set transparency:
@@ -125,11 +103,11 @@ public class DrawArea extends JComponent implements MouseMotionListener,
 		// function options:
 		if (((String) drawit.optionToolbar.getSelectCommand()).equals("SPRAY")) {
 			spray(g, m.getX(), m.getY());
-		} else if (((String) drawit.optionToolbar.getSelectCommand())
-				.equals("FLOODFILL")) {
-			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-					RenderingHints.VALUE_ANTIALIAS_ON);
-			floodFill(g, m.getX(), m.getY());
+		} else if (((String) drawit.optionToolbar.getSelectCommand()).equals("FLOODFILL")) {
+			if (this.offscreen.getRGB(x, y) == -1) {
+				g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+				floodFill(g, m.getX(), m.getY());
+			}
 		} else {
 			g.drawLine(x, y, m.getX(), m.getY());
 		}
@@ -137,6 +115,13 @@ public class DrawArea extends JComponent implements MouseMotionListener,
 		x = m.getX();
 		y = m.getY();
 		drawOffscreen();
+	}
+
+	/**
+	 * 
+	 */
+	public void smudge() {
+		// TODO!
 	}
 
 	/**
@@ -168,11 +153,14 @@ public class DrawArea extends JComponent implements MouseMotionListener,
 	}
 
 	/**
-	 * area flood fill in a selected area specified by a given point.
+	 * area flood fill in a selected area specified by a given point. b
+	 * 
+	 * Bug exists using recursion: StackOverflow.
 	 * 
 	 * @param g
 	 */
 	public void floodFill(Graphics2D g, int x, int y) {
+		// TODO!
 		g.drawLine(x, y, x, y);
 		if (this.offscreen.getRGB(x + 1, y) == -1) {
 			floodFill(g, x + 1, y);
@@ -206,6 +194,7 @@ public class DrawArea extends JComponent implements MouseMotionListener,
 	public void mousePressed(MouseEvent e) {
 		this.x = e.getX();
 		this.y = e.getY();
+		// System.out.println(this.offscreen.getRGB(x, y));
 	}
 
 	/**
