@@ -54,6 +54,9 @@ public class DrawIt implements Runnable {
 		colorToolbar.addJButton("+", "INCTRANSPARENCY");
 		colorToolbar.addJButton("-", "DECTRANSPARENCY");
 
+		colorToolbar.addJButton("Edit", "EDIT"); // enable and disable
+													// editing-line mode.
+
 		jf.getContentPane().add(colorToolbar, BorderLayout.LINE_END);
 
 		// create some menus

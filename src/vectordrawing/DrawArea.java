@@ -8,6 +8,7 @@ import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -33,6 +34,7 @@ public class DrawArea extends JComponent implements MouseMotionListener,
 	Lines lines;
 	int linesCount = 0;
 	boolean isDragging = false;
+	Line selectedLine = null;
 
 	// last starting point:
 	private int x = -1, y = -1;
@@ -84,6 +86,14 @@ public class DrawArea extends JComponent implements MouseMotionListener,
 	 * when dragging the mouse, draw line on screen.
 	 */
 	public void mouseDragged(MouseEvent m) {
+		// do not draw new line when in editing-line mode:
+		if (drawit.colorToolbar.isEditingMode()) {
+			// add move boxes to the ends of the line:
+
+			return;
+		}
+
+		this.selectedLine = null;
 		// clear the current screen:
 		this.clearOffscreen();
 
@@ -223,6 +233,18 @@ public class DrawArea extends JComponent implements MouseMotionListener,
 		this.x = e.getX();
 		this.y = e.getY();
 		this.isDragging = true;
+		if (drawit.colorToolbar.isEditingMode()) {
+			Line nearestLine = lines.nearestLine(x, y);
+			double dist = Line2D.ptLineDistSq(nearestLine.getX0(),
+					nearestLine.getY0(), nearestLine.getXn(),
+					nearestLine.getYn(), x, y);
+			if (dist < 3) {
+				this.selectedLine = nearestLine;
+				lines.getLines().remove(nearestLine);
+				lines.getLines().add(nearestLine);
+
+			}
+		}
 	}
 
 	/**

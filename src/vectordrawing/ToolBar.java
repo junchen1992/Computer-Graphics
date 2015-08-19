@@ -32,6 +32,7 @@ public class ToolBar extends JPanel implements ActionListener {
 
 	/** map */
 	private HashMap<String, JLabel> map;
+	private boolean editingMode = false;
 
 	public ToolBar(int axis) {
 		this.setLayout(new BoxLayout(this, axis));
@@ -125,6 +126,8 @@ public class ToolBar extends JPanel implements ActionListener {
 			}
 			label.setText(label.getText().split(":")[0] + ": " + transparency
 					+ "%");
+		} else if (arg0.getActionCommand().equalsIgnoreCase("EDIT")) {
+			editingMode = !editingMode;
 		}
 
 		for (Observer o : observers)
@@ -165,5 +168,13 @@ public class ToolBar extends JPanel implements ActionListener {
 		int transparency = Integer.parseInt(map.get("TRANSPARENCY").getText()
 				.split(":")[1].replace("%", "").trim());
 		return transparency;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public boolean isEditingMode() {
+		return this.editingMode;
 	}
 }

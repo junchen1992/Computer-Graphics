@@ -2,6 +2,7 @@ package vectordrawing;
 
 import java.awt.Color;
 import java.awt.Stroke;
+import java.awt.geom.Line2D;
 import java.util.ArrayList;
 
 public class Lines {
@@ -32,6 +33,28 @@ public class Lines {
 
 	public void reposLine() {
 
+	}
+
+	/**
+	 * 
+	 * @param px
+	 * @param py
+	 * @return the line that is nearest to the given point (px, py).
+	 */
+	public Line nearestLine(double px, double py) {
+		double minDist = 1000;
+		Line line = null;
+		Line res = null;
+		for (int i = 0; i < lines.size(); i++) {
+			line = lines.get(i);
+			double dist = Line2D.ptLineDist(line.getX0(), line.getY0(),
+					line.getXn(), line.getYn(), px, py);
+			if (dist < minDist) {
+				minDist = dist;
+				res = line;
+			}
+		}
+		return res;
 	}
 
 	public ArrayList<Line> getLines() {
