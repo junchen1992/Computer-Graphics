@@ -2,7 +2,18 @@ package lab4;
 
 import java.awt.Dimension;
 
+import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
+import javax.media.opengl.GLAutoDrawable;
+import javax.media.opengl.GLCapabilities;
+import javax.media.opengl.GLEventListener;
+import javax.media.opengl.GLProfile;
+import javax.media.opengl.awt.GLCanvas;
+import javax.media.opengl.glu.GLU;
 import javax.swing.JFrame;
+
+import com.jogamp.opengl.util.FPSAnimator;
+import com.jogamp.opengl.util.gl2.GLUT;
 
 public class ScreenSaverOGL implements GLEventListener {
 
@@ -20,7 +31,7 @@ public class ScreenSaverOGL implements GLEventListener {
 	 * ScreenSaverOGL.java java -cp
 	 * .:/usr/share/java/jogl2.jar:/usr/share/java/gluegen2-2.2.4-rt.jar
 	 * ScreenSaverOGL should work.
-	 *
+	 * 
 	 * On our lab machine you may also need to check you are using Java 7. You
 	 * can run it directly using: /usr/lib/jvm/java-7-openjdk-amd64/bin/javac
 	 * and /usr/lib/jvm/java-7-openjdk-amd64/bin/java
