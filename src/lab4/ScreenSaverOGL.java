@@ -4,6 +4,7 @@ import java.awt.Dimension;
 
 import javax.swing.JFrame;
 
+import com.jogamp.nativewindow.util.Point;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
@@ -70,6 +71,8 @@ public class ScreenSaverOGL implements GLEventListener {
 		new ScreenSaverOGL();
 	}
 
+	@SuppressWarnings("unused")
+	@Override
 	public void init(GLAutoDrawable dr) { // set up openGL for 2D drawing
 		GL2 gl2 = dr.getGL().getGL2();
 		GLU glu = new GLU();
@@ -82,6 +85,8 @@ public class ScreenSaverOGL implements GLEventListener {
 		gl2.glLoadIdentity();
 	}
 
+	@SuppressWarnings("unused")
+	@Override
 	public void display(GLAutoDrawable dr) { // clear the screen and draw "Save
 												// the Screens"
 		GL2 gl2 = dr.getGL().getGL2();
@@ -100,9 +105,26 @@ public class ScreenSaverOGL implements GLEventListener {
 			xpos = 0.0f;
 	}
 
+	@Override
 	public void dispose(GLAutoDrawable glautodrawable) {
 	}
 
+	@Override
 	public void reshape(GLAutoDrawable dr, int x, int y, int width, int height) {
 	}
+
+	/**
+	 * draw a line in OpenGL.
+	 * 
+	 * @param gl
+	 * @param p1
+	 * @param p2
+	 */
+	public void drawLine(GL gl, Point p1, Point p2) {
+		((GL2) gl).glBegin(GL.GL_LINES);
+		((GL2) gl).glVertex2i(p1.getX(), p1.getY());
+		((GL2) gl).glVertex2i(p2.getX(), p2.getY());
+		((GL2) gl).glEnd();
+	}
+
 }
