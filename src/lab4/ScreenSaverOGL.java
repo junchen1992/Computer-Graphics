@@ -56,7 +56,7 @@ public class ScreenSaverOGL implements GLEventListener {
 	/***/
 	float ypos;
 	float yvel;
-	private final static String imageSrc = "/Computer-Graphics/Gin.png";
+	private final static String imageSrc = "/Users/Jason/git/Computer-Graphics/climber.png";
 	Texture cgtexture;
 
 	public ScreenSaverOGL() {
@@ -102,7 +102,7 @@ public class ScreenSaverOGL implements GLEventListener {
 		// !TODO
 		// load an image:
 		try {
-			cgtexture = TextureIO.newTexture(new File("/Users/Jason/git/Computer-Graphics/climber.png"), false);
+			cgtexture = TextureIO.newTexture(new File(imageSrc), false);
 			cgtexture.enable(gl2);
 			cgtexture.bind(gl2);
 		} catch (GLException | IOException e) {
