@@ -49,6 +49,10 @@ public class ScreenSaverOGL implements GLEventListener {
 	float xpos;
 	float xvel;
 
+	/***/
+	float ypos;
+	float yvel;
+
 	public ScreenSaverOGL() {
 		jf = new JFrame();
 		profile = GLProfile.getDefault();
@@ -63,6 +67,11 @@ public class ScreenSaverOGL implements GLEventListener {
 		jf.pack();
 		animator = new FPSAnimator(canvas, 20);
 		xpos = 100.0f;
+
+		/***/
+		ypos = 100.0f;
+		yvel = 2.0f;
+
 		xvel = 1.0f;
 		animator.start();
 	}
@@ -95,6 +104,39 @@ public class ScreenSaverOGL implements GLEventListener {
 
 		gl2.glClear(GL.GL_COLOR_BUFFER_BIT);
 
+		// step 1:
+		// draw a line:
+		gl2.glColor3f(0.0f, 1.0f, 0.0f);
+		gl2.glBegin(GL.GL_LINES);
+		gl2.glVertex2f(xpos + 180, 15);
+		gl2.glVertex2f(xpos + 10, 145);
+		gl2.glEnd();
+
+		// draw a line:
+		gl2.glColor3f(0.0f, 1.0f, 0.0f);
+		gl2.glBegin(GL.GL_LINES);
+		gl2.glVertex2f(xpos + 180, 15);
+		gl2.glVertex2f(xpos + 10, 15);
+		gl2.glEnd();
+
+		// draw a filled polygon:
+		gl2.glColor3f(0.0f, 0.0f, 1.0f);
+		gl2.glBegin(GL2.GL_POLYGON);
+		gl2.glVertex2f(xpos + 100, 100);
+		gl2.glVertex2f(xpos + 100, 200);
+		gl2.glVertex2f(xpos + 200, 200);
+		gl2.glVertex2f(xpos + 200, 100);
+		gl2.glEnd();
+
+		// draw a filled polygon:
+		gl2.glColor3f(0.5f, 0.5f, 0.5f);
+		gl2.glBegin(GL2.GL_POLYGON);
+		gl2.glVertex2f(xpos + 150, 100 + ypos);
+		gl2.glVertex2f(xpos + 200, 100 + ypos);
+		gl2.glVertex2f(xpos + 150, 50 + ypos);
+		gl2.glVertex2f(xpos + 200, 50 + ypos);
+		gl2.glEnd();
+
 		gl2.glColor3f(1.0f, 0.0f, 0.0f);
 		gl2.glRasterPos2f(xpos, 300.0f);
 		glut.glutBitmapString(GLUT.BITMAP_HELVETICA_18, "Save the Screens");
@@ -103,6 +145,11 @@ public class ScreenSaverOGL implements GLEventListener {
 		xpos += xvel;
 		if (xpos > dim.getWidth())
 			xpos = 0.0f;
+
+		/***/
+		ypos += yvel;
+		if (ypos > dim.getHeight())
+			ypos = 0.0f;
 	}
 
 	@Override
