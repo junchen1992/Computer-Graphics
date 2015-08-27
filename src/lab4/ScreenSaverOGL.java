@@ -1,20 +1,24 @@
 package lab4;
 
 import java.awt.Dimension;
+import java.io.File;
+import java.io.IOException;
 
 import javax.swing.JFrame;
 
-import com.jogamp.nativewindow.util.Point;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.GLEventListener;
+import com.jogamp.opengl.GLException;
 import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.FPSAnimator;
 import com.jogamp.opengl.util.gl2.GLUT;
+import com.jogamp.opengl.util.texture.Texture;
+import com.jogamp.opengl.util.texture.TextureIO;
 
 public class ScreenSaverOGL implements GLEventListener {
 
@@ -52,6 +56,8 @@ public class ScreenSaverOGL implements GLEventListener {
 	/***/
 	float ypos;
 	float yvel;
+	private final static String imageSrc = "/Computer-Graphics/Gin.png";
+	Texture cgtexture;
 
 	public ScreenSaverOGL() {
 		jf = new JFrame();
@@ -92,6 +98,17 @@ public class ScreenSaverOGL implements GLEventListener {
 		glu.gluOrtho2D(0.0, dim.getWidth(), 0.0, dim.getHeight());
 		gl2.glMatrixMode(GL2.GL_MODELVIEW);
 		gl2.glLoadIdentity();
+
+		// !TODO
+		// load an image:
+		try {
+			cgtexture = TextureIO.newTexture(new File("/Users/Jason/git/Computer-Graphics/climber.png"), false);
+			cgtexture.enable(gl2);
+			cgtexture.bind(gl2);
+		} catch (GLException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@SuppressWarnings("unused")
@@ -137,6 +154,22 @@ public class ScreenSaverOGL implements GLEventListener {
 		gl2.glVertex2f(xpos + 200, 50 + ypos);
 		gl2.glEnd();
 
+		// step 2:
+		gl2.glPushMatrix();
+		gl2.glTranslated(xpos, 100.0, 0.0);
+		gl2.glRotated(xpos - 100.0, 0.0, 0.0, 1.0);
+		gl2.glBegin(GL2.GL_POLYGON);
+		gl2.glTexCoord2d(0.01, 0.4);
+		gl2.glVertex2d(10.0, 10.0);
+		gl2.glTexCoord2d(0.5, 0.4);
+		gl2.glVertex2d(500.0, 10.0);
+		gl2.glTexCoord2d(0.5, 1.0);
+		gl2.glVertex2d(500.0, 100.0);
+		gl2.glTexCoord2d(0.01, 1.0);
+		gl2.glVertex2d(10.0, 100.0);
+		gl2.glEnd();
+		gl2.glPopMatrix();
+
 		gl2.glColor3f(1.0f, 0.0f, 0.0f);
 		gl2.glRasterPos2f(xpos, 300.0f);
 		glut.glutBitmapString(GLUT.BITMAP_HELVETICA_18, "Save the Screens");
@@ -158,20 +191,6 @@ public class ScreenSaverOGL implements GLEventListener {
 
 	@Override
 	public void reshape(GLAutoDrawable dr, int x, int y, int width, int height) {
-	}
-
-	/**
-	 * draw a line in OpenGL.
-	 * 
-	 * @param gl
-	 * @param p1
-	 * @param p2
-	 */
-	public void drawLine(GL gl, Point p1, Point p2) {
-		((GL2) gl).glBegin(GL.GL_LINES);
-		((GL2) gl).glVertex2i(p1.getX(), p1.getY());
-		((GL2) gl).glVertex2i(p2.getX(), p2.getY());
-		((GL2) gl).glEnd();
 	}
 
 }
