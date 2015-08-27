@@ -49,6 +49,7 @@ public class ScreenSaverOGL implements GLEventListener {
 		new ScreenSaverOGL();
 	}
 
+	@SuppressWarnings("unused")
 	public void init(GLAutoDrawable dr) { // set up openGL for 2D drawing
 		GL2 gl2 = dr.getGL().getGL2();
 		GLU glu = new GLU();
@@ -61,6 +62,7 @@ public class ScreenSaverOGL implements GLEventListener {
 		gl2.glLoadIdentity();
 	}
 
+	@SuppressWarnings("unused")
 	public void display(GLAutoDrawable dr) { // clear the screen and draw "Save
 												// the Screens"
 		GL2 gl2 = dr.getGL().getGL2();
