@@ -57,6 +57,7 @@ public class ScreenSaverOGL implements GLEventListener {
 	float ypos;
 	float yvel;
 	private final static String imageSrc1 = "/Users/Jason/git/Computer-Graphics/index.png";
+	@SuppressWarnings("unused")
 	private final static String imageSrc2 = "/students/u5485230/git/Computer-Graphics/climber.png";
 	Texture cgtexture;
 
