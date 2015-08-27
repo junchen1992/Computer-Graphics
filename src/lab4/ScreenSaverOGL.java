@@ -56,7 +56,9 @@ public class ScreenSaverOGL implements GLEventListener {
 	/***/
 	float ypos;
 	float yvel;
-	private final static String imageSrc = "/Users/Jason/git/Computer-Graphics/climber.png";
+	// private final static String imageSrc =
+	// "/Users/Jason/git/Computer-Graphics/index.png";
+	private final static String imageSrc = "/students/u5485230/git/Computer-Graphics/climber.png";
 	Texture cgtexture;
 
 	public ScreenSaverOGL() {
@@ -155,8 +157,9 @@ public class ScreenSaverOGL implements GLEventListener {
 		gl2.glEnd();
 
 		// step 2:
+		gl2.glColor3f(1.0f, 1.0f, 1.0f);
 		gl2.glPushMatrix();
-		gl2.glTranslated(xpos, 100.0, 0.0);
+		gl2.glTranslated(xpos, 100.0 + ypos, 0.0);
 		gl2.glRotated(xpos - 100.0, 0.0, 0.0, 1.0);
 		gl2.glBegin(GL2.GL_POLYGON);
 		gl2.glTexCoord2d(0.01, 0.4);
