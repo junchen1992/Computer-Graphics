@@ -103,7 +103,7 @@ public class ScreenSaverOGL implements GLEventListener {
 		// !TODO
 		// load an image:
 		try {
-			cgtexture = TextureIO.newTexture(new File(imageSrc2), true);
+			cgtexture = TextureIO.newTexture(new File(imageSrc1), true);
 			cgtexture.enable(gl2);
 			cgtexture.bind(gl2);
 		} catch (GLException | IOException e) {
@@ -156,21 +156,28 @@ public class ScreenSaverOGL implements GLEventListener {
 		gl2.glEnd();
 
 		// step 2:
+		cgtexture.enable(gl2);
+		cgtexture.bind(gl2);
+
 		gl2.glColor3f(1.0f, 1.0f, 1.0f);
 		gl2.glPushMatrix();
 		gl2.glTranslated(xpos, 100.0 + ypos, 0.0);
 		gl2.glRotated(xpos - 100.0, 0.0, 0.0, 1.0);
 		gl2.glBegin(GL2.GL_POLYGON);
-		gl2.glTexCoord2d(0.01, 0.4);
+
+		gl2.glTexCoord2d(0.0, 0.0);
 		gl2.glVertex2d(10.0, 10.0);
-		gl2.glTexCoord2d(0.5, 0.4);
-		gl2.glVertex2d(500.0, 10.0);
-		gl2.glTexCoord2d(0.5, 1.0);
-		gl2.glVertex2d(500.0, 100.0);
-		gl2.glTexCoord2d(0.01, 1.0);
-		gl2.glVertex2d(10.0, 100.0);
+		gl2.glTexCoord2d(1.0, 0.0);
+		gl2.glVertex2d(110.0, 10.0);
+		gl2.glTexCoord2d(1.0, 1.0);
+		gl2.glVertex2d(110.0, 40.0);
+		gl2.glTexCoord2d(0.0, 1.0);
+		gl2.glVertex2d(10.0, 40.0);
+
 		gl2.glEnd();
 		gl2.glPopMatrix();
+
+		cgtexture.disable(gl2);
 
 		gl2.glColor3f(1.0f, 0.0f, 0.0f);
 		gl2.glRasterPos2f(xpos, 300.0f);

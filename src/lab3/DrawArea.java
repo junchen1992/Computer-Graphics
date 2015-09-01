@@ -100,6 +100,10 @@ public class DrawArea extends JComponent implements MouseMotionListener, MouseLi
 		// set transparency:
 		g.setColor(newColor);
 
+		if (newColor.equals(Color.WHITE)) {
+			g.setStroke(new BasicStroke((float) 5));
+		}
+
 		// function options:
 		if (((String) drawit.optionToolbar.getSelectCommand()).equals("SPRAY")) {
 			spray(g, m.getX(), m.getY());
