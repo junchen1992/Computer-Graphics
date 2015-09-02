@@ -15,7 +15,28 @@ import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.FPSAnimator;
 import com.jogamp.opengl.util.gl2.GLUT;
 
-public class ScreenSaverOGL implements GLEventListener {
+public class ScreenSaverOGLLectplay implements GLEventListener {
+
+	/**
+	 * ScreenSaverOGL - this is a simple screen saver that uses JOGL2 Eric
+	 * McCreath 2009, 2011, 2015
+	 * 
+	 * You need to include the jogl jar files (gluegen-rt.jar and jogl.jar). In
+	 * eclipse use "add external jars" in Project->Properties->Libaries
+	 * otherwise make certain they are in the class path. In the current linux
+	 * computers there files are in the /usr/share/java directory.
+	 * 
+	 * If you are executing from the command line then something like: javac -cp
+	 * .:/usr/share/java/jogl2.jar:/usr/share/java/gluegen2-2.2.4-rt.jar
+	 * ScreenSaverOGL.java java -cp
+	 * .:/usr/share/java/jogl2.jar:/usr/share/java/gluegen2-2.2.4-rt.jar
+	 * ScreenSaverOGL should work.
+	 * 
+	 * On our lab machine you may also need to check you are using Java 7. You
+	 * can run it directly using: /usr/lib/jvm/java-7-openjdk-amd64/bin/javac
+	 * and /usr/lib/jvm/java-7-openjdk-amd64/bin/java
+	 * 
+	 */
 
 	JFrame jf;
 	GLCanvas canvas;
@@ -27,7 +48,7 @@ public class ScreenSaverOGL implements GLEventListener {
 	float xpos;
 	float xvel;
 
-	public ScreenSaverOGL() {
+	public ScreenSaverOGLLectplay() {
 		jf = new JFrame();
 		profile = GLProfile.getDefault();
 		caps = new GLCapabilities(profile);
@@ -39,42 +60,31 @@ public class ScreenSaverOGL implements GLEventListener {
 		jf.setVisible(true);
 		jf.setPreferredSize(dim);
 		jf.pack();
-		animator = new FPSAnimator(canvas, 50);
+		animator = new FPSAnimator(canvas, 20);
 		xpos = 0.0f;
 		xvel = 1.0f;
 		animator.start();
 	}
 
 	public static void main(String[] args) {
-		new ScreenSaverOGL();
+		new ScreenSaverOGLLectplay();
 	}
 
-	@SuppressWarnings("unused")
 	public void init(GLAutoDrawable dr) { // set up openGL for 2D drawing
 		GL2 gl2 = dr.getGL().getGL2();
 		GLU glu = new GLU();
 		GLUT glut = new GLUT();
-
 		gl2.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-
-		// *
 		gl2.glEnable(GL2.GL_DEPTH_TEST);
-
 		gl2.glMatrixMode(GL2.GL_PROJECTION);
 		gl2.glLoadIdentity();
-
-		// glu.gluOrtho2D(0.0, dim.getWidth(), 0.0, dim.getHeight());
 		glu.gluPerspective(60.0, 1.0, 100.0, 1000.0);
-
 		gl2.glMatrixMode(GL2.GL_MODELVIEW);
 		gl2.glLoadIdentity();
-
-		// *
 		glu.gluLookAt(100.0, 100.0, 500.0, 100.0, 100.0, 25.0, 0.0, 1.0, 0.0);
 
 	}
 
-	@SuppressWarnings("unused")
 	public void display(GLAutoDrawable dr) { // clear the screen and draw
 												// "Save the Screens"
 		GL2 gl2 = dr.getGL().getGL2();
@@ -84,7 +94,7 @@ public class ScreenSaverOGL implements GLEventListener {
 		gl2.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 		gl2.glPushMatrix();
 		gl2.glRotated(xpos, 0.0, 1.0, 0.0);
-		gl2.glColor3f(0.3f, 0.5f, 0.7f);
+		gl2.glColor3f(1.0f, 0.0f, 0.0f);
 		gl2.glBegin(GL2.GL_POLYGON);
 		gl2.glVertex3d(0.0, 0.0, 0.0);
 		gl2.glVertex3d(300.0, 0.0, 0.0);
@@ -92,69 +102,25 @@ public class ScreenSaverOGL implements GLEventListener {
 		gl2.glVertex3d(0.0, 200.0, 0.0);
 		gl2.glEnd();
 
-		// method 1 to duplicate the polygon 4 times:
-		duplicate(gl2, -50, -50, -50);
-		duplicate(gl2, -25, -25, -25);
-		duplicate(gl2, 50, 50, 50);
-		duplicate(gl2, 100, 100, 100);
-
-		// duplicate(gl2, 100, 100, 100);
-		// duplicate(gl2, 150, 150, 150);
-
+		gl2.glTranslated(50.0, 50.0, 50.0);
+		gl2.glColor3f(0.0f, 0.0f, 1.0f);
+		gl2.glBegin(GL2.GL_POLYGON);
+		gl2.glVertex3d(0.0, 0.0, 0.0);
+		gl2.glVertex3d(300.0, 0.0, 0.0);
+		gl2.glVertex3d(300.0, 200.0, 0.0);
+		gl2.glVertex3d(0.0, 200.0, 0.0);
+		gl2.glEnd();
 		gl2.glPopMatrix();
 		gl2.glFlush();
 
 		xpos += xvel;
 		if (xpos > dim.getWidth())
 			xpos = 0.0f;
-	}
-
-	public void duplicate(GL2 gl2, double x, double y, double z) {
-		gl2.glTranslated(x, y, z);
-		// change the color of the duplicated polygons:
-		gl2.glColor3f(0.0f, 1.0f, 1.0f);
-		gl2.glBegin(GL2.GL_POLYGON);
-		gl2.glVertex3d(0.0, 0.0, 0.0);
-		gl2.glVertex3d(300.0, 0.0, 0.0);
-		gl2.glVertex3d(300.0, 200.0, 0.0);
-		gl2.glVertex3d(0.0, 200.0, 0.0);
-		gl2.glEnd();
 	}
 
 	public void dispose(GLAutoDrawable glautodrawable) {
 	}
 
 	public void reshape(GLAutoDrawable dr, int x, int y, int width, int height) {
-	}
-
-	@SuppressWarnings("unused")
-	public void display2(GLAutoDrawable dr) { // clear the screen and draw "Save
-												// the Screens"
-		GL2 gl2 = dr.getGL().getGL2();
-		GLU glu = new GLU();
-		GLUT glut = new GLUT();
-
-		gl2.glClear(GL.GL_COLOR_BUFFER_BIT);
-
-		// draw a polygon:
-		gl2.glPushMatrix();
-		gl2.glColor3f(0.5f, 0.5f, 0.5f);
-		gl2.glRotatef(xpos, 0.0f, 1.0f, 0.0f);
-		gl2.glBegin(GL2.GL_POLYGON);
-		gl2.glVertex3f(100, 100, 0);
-		gl2.glVertex3f(100, 900, 0);
-		gl2.glVertex3f(1200, 900, 0);
-		gl2.glVertex3f(1200, 100, 0);
-		gl2.glEnd();
-		gl2.glPopMatrix();
-
-		gl2.glColor3f(1.0f, 0.0f, 0.0f);
-		gl2.glRasterPos2f(xpos, 300.0f);
-		glut.glutBitmapString(GLUT.BITMAP_HELVETICA_18, "OpenGL 3D Rotation");
-		gl2.glFlush();
-
-		xpos += xvel;
-		if (xpos > dim.getWidth())
-			xpos = 0.0f;
 	}
 }
