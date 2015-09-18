@@ -27,6 +27,12 @@ public class ScreenSaverOGL implements GLEventListener {
 	float xpos;
 	float xvel;
 
+	/** rquad */
+	private float rquad = 0.0f;
+
+	/** cube width */
+	private float cubeWidth = 0.3f;
+
 	public ScreenSaverOGL() {
 		jf = new JFrame();
 		profile = GLProfile.getDefault();
@@ -39,7 +45,7 @@ public class ScreenSaverOGL implements GLEventListener {
 		jf.setVisible(true);
 		jf.setPreferredSize(dim);
 		jf.pack();
-		animator = new FPSAnimator(canvas, 20);
+		animator = new FPSAnimator(canvas, 50);
 		xpos = 100.0f;
 		xvel = 1.0f;
 		animator.start();
@@ -50,6 +56,7 @@ public class ScreenSaverOGL implements GLEventListener {
 	}
 
 	@SuppressWarnings("unused")
+	@Override
 	public void init(GLAutoDrawable dr) { // set up openGL for 2D drawing
 		GL2 gl2 = dr.getGL().getGL2();
 		GLU glu = new GLU();
@@ -58,7 +65,10 @@ public class ScreenSaverOGL implements GLEventListener {
 		gl2.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
 		// *
+		// gl2.glClearDepth(1.0f);
 		gl2.glEnable(GL2.GL_DEPTH_TEST);
+		// gl2.glDepthFunc(GL2.GL_LEQUAL);
+		// gl2.glHint(GL2.GL_PERSPECTIVE_CORRECTION_HINT, GL2.GL_NICEST);
 
 		gl2.glMatrixMode(GL2.GL_PROJECTION);
 		gl2.glLoadIdentity();
@@ -75,7 +85,7 @@ public class ScreenSaverOGL implements GLEventListener {
 	}
 
 	@SuppressWarnings("unused")
-	public void display(GLAutoDrawable dr) { // clear the screen and draw
+	public void display1(GLAutoDrawable dr) { // clear the screen and draw
 												// "Save the Screens"
 		GL2 gl2 = dr.getGL().getGL2();
 		GLU glu = new GLU();
@@ -86,6 +96,7 @@ public class ScreenSaverOGL implements GLEventListener {
 		gl2.glPushMatrix();
 		gl2.glRotated(xpos, 0.0, 1.0, 0.0);
 		gl2.glColor3f(0.3f, 0.5f, 0.7f);
+
 		gl2.glBegin(GL2.GL_POLYGON);
 		gl2.glVertex3d(0.0, 0.0, 0.0);
 		gl2.glVertex3d(300.0, 0.0, 0.0);
@@ -130,40 +141,192 @@ public class ScreenSaverOGL implements GLEventListener {
 		gl2.glEnd();
 	}
 
-	public void dispose(GLAutoDrawable glautodrawable) {
+	@Override
+	public void dispose(GLAutoDrawable dr) {
 	}
 
+	@Override
 	public void reshape(GLAutoDrawable dr, int x, int y, int width, int height) {
-	}
-
-	@SuppressWarnings("unused")
-	public void display2(GLAutoDrawable dr) { // clear the screen and draw "Save
-												// the Screens"
-		GL2 gl2 = dr.getGL().getGL2();
+		final GL2 gl = dr.getGL().getGL2();
 		GLU glu = new GLU();
-		GLUT glut = new GLUT();
-
-		gl2.glClear(GL.GL_COLOR_BUFFER_BIT);
-
-		// draw a polygon:
-		gl2.glPushMatrix();
-		gl2.glColor3f(0.5f, 0.5f, 0.5f);
-		gl2.glRotatef(xpos, 0.0f, 1.0f, 0.0f);
-		gl2.glBegin(GL2.GL_POLYGON);
-		gl2.glVertex3f(100, 100, 0);
-		gl2.glVertex3f(100, 900, 0);
-		gl2.glVertex3f(1200, 900, 0);
-		gl2.glVertex3f(1200, 100, 0);
-		gl2.glEnd();
-		gl2.glPopMatrix();
-
-		gl2.glColor3f(1.0f, 0.0f, 0.0f);
-		gl2.glRasterPos2f(xpos, 300.0f);
-		glut.glutBitmapString(GLUT.BITMAP_HELVETICA_18, "OpenGL 3D Rotation");
-		gl2.glFlush();
-
-		xpos += xvel;
-		if (xpos > dim.getWidth())
-			xpos = 0.0f;
+		if (height <= 0)
+			height = 1;
+		final float h = (float) width / (float) height;
+		gl.glViewport(0, 0, width, height);
+		gl.glMatrixMode(GL2.GL_PROJECTION);
+		gl.glLoadIdentity();
+		glu.gluPerspective(45.0f, h, 1.0, 20.0);
+		gl.glMatrixMode(GL2.GL_MODELVIEW);
+		gl.glLoadIdentity();
 	}
+
+	/**
+	 * Display method for step 2.
+	 * 
+	 * @param dr
+	 */
+	public void display(GLAutoDrawable dr) {
+		GL2 gl = dr.getGL().getGL2();
+
+		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
+		gl.glLoadIdentity();
+		gl.glTranslatef(0f, 0f, -5.0f);
+		gl.glRotatef(rquad, 1.0f, 1.0f, 1.0f);
+		// Start Drawing The Cube
+		gl.glBegin(GL2.GL_QUADS);
+		// red color
+		// gl.glColor3f(1f, 0f, 0f);
+		// gl.glVertex3f(1.0f, 1.0f, -1.0f);
+		// gl.glVertex3f(-1.0f, 1.0f, -1.0f);
+		// gl.glVertex3f(-1.0f, 1.0f, 1.0f);
+		// gl.glVertex3f(1.0f, 1.0f, 1.0f);
+
+		// green color
+		gl.glColor3f(0f, 1f, 0f);
+		gl.glVertex3f(cubeWidth, -cubeWidth, cubeWidth);
+		gl.glVertex3f(-cubeWidth, -cubeWidth, cubeWidth);
+		gl.glVertex3f(-cubeWidth, -cubeWidth, -cubeWidth);
+		gl.glVertex3f(cubeWidth, -cubeWidth, -cubeWidth);
+
+		// blue color
+		gl.glColor3f(0f, 0f, 1f);
+		gl.glVertex3f(cubeWidth, cubeWidth, cubeWidth);
+		gl.glVertex3f(-cubeWidth, cubeWidth, cubeWidth);
+		gl.glVertex3f(-cubeWidth, -cubeWidth, cubeWidth);
+		gl.glVertex3f(cubeWidth, -cubeWidth, cubeWidth);
+
+		// yellow (red + green)
+		gl.glColor3f(1f, 1f, 0f);
+		gl.glVertex3f(cubeWidth, -cubeWidth, -cubeWidth);
+		gl.glVertex3f(-cubeWidth, -cubeWidth, -cubeWidth);
+		gl.glVertex3f(-cubeWidth, cubeWidth, -cubeWidth);
+		gl.glVertex3f(cubeWidth, cubeWidth, -cubeWidth);
+
+		// purple (red + green)
+		gl.glColor3f(1f, 0f, 1f);
+		gl.glVertex3f(-cubeWidth, cubeWidth, cubeWidth);
+		gl.glVertex3f(-cubeWidth, cubeWidth, -cubeWidth);
+		gl.glVertex3f(-cubeWidth, -cubeWidth, -cubeWidth);
+		gl.glVertex3f(-cubeWidth, -cubeWidth, cubeWidth);
+
+		// sky blue (blue +green)
+		gl.glColor3f(0f, 1f, 1f);
+		gl.glVertex3f(cubeWidth, cubeWidth, -cubeWidth);
+		gl.glVertex3f(cubeWidth, cubeWidth, cubeWidth);
+		gl.glVertex3f(cubeWidth, -cubeWidth, cubeWidth);
+		gl.glVertex3f(cubeWidth, -cubeWidth, -cubeWidth);
+
+		gl.glEnd(); // Done Drawing The Quad
+
+		// duplicate:
+		duplicate2(gl, -2.0f, 0.0f, 0.0f);
+		duplicate2(gl, -1.0f, 0.0f, 0.0f);
+		duplicate2(gl, 1.0f, 0.0f, 0.0f);
+		duplicate2(gl, 2.0f, 0.0f, 0.0f);
+
+		gl.glFlush();
+		rquad -= 1.0f;
+	}
+
+	public void duplicate2(GL2 gl, float x, float y, float z) {
+		gl.glTranslatef(x, y, z);
+
+		// Rotate The Cube On X, Y & Z
+		// giving different colors to different sides
+		gl.glRotatef(rquad, 1.0f, 1.0f, 1.0f);
+
+		// Start Drawing The Cube
+		gl.glBegin(GL2.GL_QUADS);
+
+		// red color
+		// gl.glColor3f(1f, 0f, 0f);
+		// gl.glVertex3f(1.0f, 1.0f, -1.0f);
+		// gl.glVertex3f(-1.0f, 1.0f, -1.0f);
+		// gl.glVertex3f(-1.0f, 1.0f, 1.0f);
+		// gl.glVertex3f(1.0f, 1.0f, 1.0f);
+
+		// green color
+		gl.glColor3f(0f, 1f, 0f);
+		gl.glVertex3f(cubeWidth, -cubeWidth, cubeWidth);
+		gl.glVertex3f(-cubeWidth, -cubeWidth, cubeWidth);
+		gl.glVertex3f(-cubeWidth, -cubeWidth, -cubeWidth);
+		gl.glVertex3f(cubeWidth, -cubeWidth, -cubeWidth);
+
+		// blue color
+		gl.glColor3f(0f, 0f, 1f);
+		gl.glVertex3f(cubeWidth, cubeWidth, cubeWidth);
+		gl.glVertex3f(-cubeWidth, cubeWidth, cubeWidth);
+		gl.glVertex3f(-cubeWidth, -cubeWidth, cubeWidth);
+		gl.glVertex3f(cubeWidth, -cubeWidth, cubeWidth);
+
+		// yellow (red + green)
+		gl.glColor3f(1f, 1f, 0f);
+		gl.glVertex3f(cubeWidth, -cubeWidth, -cubeWidth);
+		gl.glVertex3f(-cubeWidth, -cubeWidth, -cubeWidth);
+		gl.glVertex3f(-cubeWidth, cubeWidth, -cubeWidth);
+		gl.glVertex3f(cubeWidth, cubeWidth, -cubeWidth);
+
+		// purple (red + green)
+		gl.glColor3f(1f, 0f, 1f);
+		gl.glVertex3f(-cubeWidth, cubeWidth, cubeWidth);
+		gl.glVertex3f(-cubeWidth, cubeWidth, -cubeWidth);
+		gl.glVertex3f(-cubeWidth, -cubeWidth, -cubeWidth);
+		gl.glVertex3f(-cubeWidth, -cubeWidth, cubeWidth);
+
+		// sky blue (blue +green)
+		gl.glColor3f(0f, 1f, 1f);
+		gl.glVertex3f(cubeWidth, cubeWidth, -cubeWidth);
+		gl.glVertex3f(cubeWidth, cubeWidth, cubeWidth);
+		gl.glVertex3f(cubeWidth, -cubeWidth, cubeWidth);
+		gl.glVertex3f(cubeWidth, -cubeWidth, -cubeWidth);
+
+		gl.glEnd(); // Done Drawing The Quad// Start Drawing The Cube
+		gl.glBegin(GL2.GL_QUADS);
+		// red color
+		// gl.glColor3f(1f, 0f, 0f);
+		// gl.glVertex3f(1.0f, 1.0f, -1.0f);
+		// gl.glVertex3f(-1.0f, 1.0f, -1.0f);
+		// gl.glVertex3f(-1.0f, 1.0f, 1.0f);
+		// gl.glVertex3f(1.0f, 1.0f, 1.0f);
+
+		// green color
+		gl.glColor3f(0f, 1f, 0f);
+		gl.glVertex3f(cubeWidth, -cubeWidth, cubeWidth);
+		gl.glVertex3f(-cubeWidth, -cubeWidth, cubeWidth);
+		gl.glVertex3f(-cubeWidth, -cubeWidth, -cubeWidth);
+		gl.glVertex3f(cubeWidth, -cubeWidth, -cubeWidth);
+
+		// blue color
+		gl.glColor3f(0f, 0f, 1f);
+		gl.glVertex3f(cubeWidth, cubeWidth, cubeWidth);
+		gl.glVertex3f(-cubeWidth, cubeWidth, cubeWidth);
+		gl.glVertex3f(-cubeWidth, -cubeWidth, cubeWidth);
+		gl.glVertex3f(cubeWidth, -cubeWidth, cubeWidth);
+
+		// yellow (red + green)
+		gl.glColor3f(1f, 1f, 0f);
+		gl.glVertex3f(cubeWidth, -cubeWidth, -cubeWidth);
+		gl.glVertex3f(-cubeWidth, -cubeWidth, -cubeWidth);
+		gl.glVertex3f(-cubeWidth, cubeWidth, -cubeWidth);
+		gl.glVertex3f(cubeWidth, cubeWidth, -cubeWidth);
+
+		// purple (red + green)
+		gl.glColor3f(1f, 0f, 1f);
+		gl.glVertex3f(-cubeWidth, cubeWidth, cubeWidth);
+		gl.glVertex3f(-cubeWidth, cubeWidth, -cubeWidth);
+		gl.glVertex3f(-cubeWidth, -cubeWidth, -cubeWidth);
+		gl.glVertex3f(-cubeWidth, -cubeWidth, cubeWidth);
+
+		// sky blue (blue +green)
+		gl.glColor3f(0f, 1f, 1f);
+		gl.glVertex3f(cubeWidth, cubeWidth, -cubeWidth);
+		gl.glVertex3f(cubeWidth, cubeWidth, cubeWidth);
+		gl.glVertex3f(cubeWidth, -cubeWidth, cubeWidth);
+		gl.glVertex3f(cubeWidth, -cubeWidth, -cubeWidth);
+
+		gl.glEnd(); // Done Drawing The Quad
+
+		gl.glFlush();
+	}
+
 }
