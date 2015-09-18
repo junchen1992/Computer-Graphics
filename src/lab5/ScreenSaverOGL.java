@@ -39,8 +39,8 @@ public class ScreenSaverOGL implements GLEventListener {
 		jf.setVisible(true);
 		jf.setPreferredSize(dim);
 		jf.pack();
-		animator = new FPSAnimator(canvas, 50);
-		xpos = 0.0f;
+		animator = new FPSAnimator(canvas, 20);
+		xpos = 100.0f;
 		xvel = 1.0f;
 		animator.start();
 	}
@@ -82,6 +82,7 @@ public class ScreenSaverOGL implements GLEventListener {
 		GLUT glut = new GLUT();
 
 		gl2.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
+
 		gl2.glPushMatrix();
 		gl2.glRotated(xpos, 0.0, 1.0, 0.0);
 		gl2.glColor3f(0.3f, 0.5f, 0.7f);
@@ -109,6 +110,14 @@ public class ScreenSaverOGL implements GLEventListener {
 			xpos = 0.0f;
 	}
 
+	/**
+	 * Duplicate a polygon.
+	 * 
+	 * @param gl2
+	 * @param x
+	 * @param y
+	 * @param z
+	 */
 	public void duplicate(GL2 gl2, double x, double y, double z) {
 		gl2.glTranslated(x, y, z);
 		// change the color of the duplicated polygons:
