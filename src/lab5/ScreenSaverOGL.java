@@ -1,6 +1,8 @@
 package lab5;
 
 import java.awt.Dimension;
+import java.io.File;
+import java.io.IOException;
 
 import javax.swing.JFrame;
 
@@ -9,11 +11,14 @@ import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.GLEventListener;
+import com.jogamp.opengl.GLException;
 import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.FPSAnimator;
 import com.jogamp.opengl.util.gl2.GLUT;
+import com.jogamp.opengl.util.texture.Texture;
+import com.jogamp.opengl.util.texture.TextureIO;
 
 public class ScreenSaverOGL implements GLEventListener {
 
@@ -32,6 +37,12 @@ public class ScreenSaverOGL implements GLEventListener {
 
 	/** cube width */
 	private float cubeWidth = 0.3f;
+
+	/***/
+	// private final static String imageSrc =
+	// "/Users/Jason/git/Computer-Graphics/index.png";
+	private final static String imageSrc = "/Users/Jason/git/Computer-Graphics/lab5_pic1.png";
+	Texture cgtexture;
 
 	public ScreenSaverOGL() {
 		jf = new JFrame();
@@ -82,11 +93,20 @@ public class ScreenSaverOGL implements GLEventListener {
 		// *
 		glu.gluLookAt(100.0, 100.0, 500.0, 100.0, 100.0, 25.0, 0.0, 1.0, 0.0);
 
+		// load an image:
+		try {
+			cgtexture = TextureIO.newTexture(new File(imageSrc), true);
+			cgtexture.enable(gl2);
+			cgtexture.bind(gl2);
+		} catch (GLException | IOException e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	@SuppressWarnings("unused")
-	public void display1(GLAutoDrawable dr) { // clear the screen and draw
-												// "Save the Screens"
+	public void display1(GLAutoDrawable dr) {
+		// clear the screen and draw "Save the Screens"
 		GL2 gl2 = dr.getGL().getGL2();
 		GLU glu = new GLU();
 		GLUT glut = new GLUT();
@@ -109,9 +129,6 @@ public class ScreenSaverOGL implements GLEventListener {
 		duplicate(gl2, -25, -25, -25);
 		duplicate(gl2, 50, 50, 50);
 		duplicate(gl2, 100, 100, 100);
-
-		// duplicate(gl2, 100, 100, 100);
-		// duplicate(gl2, 150, 150, 150);
 
 		gl2.glPopMatrix();
 		gl2.glFlush();
@@ -169,6 +186,12 @@ public class ScreenSaverOGL implements GLEventListener {
 		GL2 gl = dr.getGL().getGL2();
 
 		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
+
+		cgtexture.enable(gl);
+		cgtexture.bind(gl);
+
+		// gl.glPushMatrix();
+
 		gl.glLoadIdentity();
 		gl.glTranslatef(0f, 0f, -5.0f);
 		gl.glRotatef(rquad, 1.0f, 1.0f, 1.0f);
@@ -182,10 +205,18 @@ public class ScreenSaverOGL implements GLEventListener {
 		// gl.glVertex3f(1.0f, 1.0f, 1.0f);
 
 		// green color
-		gl.glColor3f(0f, 1f, 0f);
+		gl.glColor3f(1.0f, 1.0f, 1.0f);
+		// gl.glTexCoord3f(1.0f, 0.0f, 1.0f);
+		gl.glTexCoord2f(1.0f, 1.0f);
 		gl.glVertex3f(cubeWidth, -cubeWidth, cubeWidth);
+		// gl.glTexCoord3f(1.0f, 0.0f, 0.0f);
+		gl.glTexCoord2f(1.0f, 0.0f);
 		gl.glVertex3f(-cubeWidth, -cubeWidth, cubeWidth);
+		// gl.glTexCoord3f(0.0f, 0.0f, 0.0f);
+		gl.glTexCoord2f(0.0f, 0.0f);
 		gl.glVertex3f(-cubeWidth, -cubeWidth, -cubeWidth);
+		// gl.glTexCoord3f(0.0f, 0.0f, 1.0f);
+		gl.glTexCoord2f(0.0f, 1.0f);
 		gl.glVertex3f(cubeWidth, -cubeWidth, -cubeWidth);
 
 		// blue color
@@ -216,7 +247,12 @@ public class ScreenSaverOGL implements GLEventListener {
 		gl.glVertex3f(cubeWidth, -cubeWidth, cubeWidth);
 		gl.glVertex3f(cubeWidth, -cubeWidth, -cubeWidth);
 
-		gl.glEnd(); // Done Drawing The Quad
+		// Done Drawing The Quad
+		gl.glEnd();
+
+		// gl.glPopMatrix();
+
+		cgtexture.disable(gl);
 
 		// duplicate:
 		duplicate2(gl, -2.0f, 0.0f, 0.0f);
@@ -229,11 +265,17 @@ public class ScreenSaverOGL implements GLEventListener {
 	}
 
 	public void duplicate2(GL2 gl, float x, float y, float z) {
+		gl.glPushMatrix();
+
+		// gl.glLoadIdentity();
 		gl.glTranslatef(x, y, z);
 
 		// Rotate The Cube On X, Y & Z
 		// giving different colors to different sides
 		gl.glRotatef(rquad, 1.0f, 1.0f, 1.0f);
+
+		cgtexture.enable(gl);
+		cgtexture.bind(gl);
 
 		// Start Drawing The Cube
 		gl.glBegin(GL2.GL_QUADS);
@@ -246,10 +288,18 @@ public class ScreenSaverOGL implements GLEventListener {
 		// gl.glVertex3f(1.0f, 1.0f, 1.0f);
 
 		// green color
-		gl.glColor3f(0f, 1f, 0f);
+		gl.glColor3f(1.0f, 1.0f, 1.0f);
+		// gl.glTexCoord3f(1.0f, 0.0f, 1.0f);
+		gl.glTexCoord2f(1.0f, 1.0f);
 		gl.glVertex3f(cubeWidth, -cubeWidth, cubeWidth);
+		// gl.glTexCoord3f(1.0f, 0.0f, 0.0f);
+		gl.glTexCoord2f(1.0f, 0.0f);
 		gl.glVertex3f(-cubeWidth, -cubeWidth, cubeWidth);
+		// gl.glTexCoord3f(0.0f, 0.0f, 0.0f);
+		gl.glTexCoord2f(0.0f, 0.0f);
 		gl.glVertex3f(-cubeWidth, -cubeWidth, -cubeWidth);
+		// gl.glTexCoord3f(0.0f, 0.0f, 1.0f);
+		gl.glTexCoord2f(0.0f, 1.0f);
 		gl.glVertex3f(cubeWidth, -cubeWidth, -cubeWidth);
 
 		// blue color
@@ -280,51 +330,12 @@ public class ScreenSaverOGL implements GLEventListener {
 		gl.glVertex3f(cubeWidth, -cubeWidth, cubeWidth);
 		gl.glVertex3f(cubeWidth, -cubeWidth, -cubeWidth);
 
-		gl.glEnd(); // Done Drawing The Quad// Start Drawing The Cube
-		gl.glBegin(GL2.GL_QUADS);
-		// red color
-		// gl.glColor3f(1f, 0f, 0f);
-		// gl.glVertex3f(1.0f, 1.0f, -1.0f);
-		// gl.glVertex3f(-1.0f, 1.0f, -1.0f);
-		// gl.glVertex3f(-1.0f, 1.0f, 1.0f);
-		// gl.glVertex3f(1.0f, 1.0f, 1.0f);
+		// Done Drawing The Quad
+		gl.glEnd();
 
-		// green color
-		gl.glColor3f(0f, 1f, 0f);
-		gl.glVertex3f(cubeWidth, -cubeWidth, cubeWidth);
-		gl.glVertex3f(-cubeWidth, -cubeWidth, cubeWidth);
-		gl.glVertex3f(-cubeWidth, -cubeWidth, -cubeWidth);
-		gl.glVertex3f(cubeWidth, -cubeWidth, -cubeWidth);
+		gl.glPopMatrix();
 
-		// blue color
-		gl.glColor3f(0f, 0f, 1f);
-		gl.glVertex3f(cubeWidth, cubeWidth, cubeWidth);
-		gl.glVertex3f(-cubeWidth, cubeWidth, cubeWidth);
-		gl.glVertex3f(-cubeWidth, -cubeWidth, cubeWidth);
-		gl.glVertex3f(cubeWidth, -cubeWidth, cubeWidth);
-
-		// yellow (red + green)
-		gl.glColor3f(1f, 1f, 0f);
-		gl.glVertex3f(cubeWidth, -cubeWidth, -cubeWidth);
-		gl.glVertex3f(-cubeWidth, -cubeWidth, -cubeWidth);
-		gl.glVertex3f(-cubeWidth, cubeWidth, -cubeWidth);
-		gl.glVertex3f(cubeWidth, cubeWidth, -cubeWidth);
-
-		// purple (red + green)
-		gl.glColor3f(1f, 0f, 1f);
-		gl.glVertex3f(-cubeWidth, cubeWidth, cubeWidth);
-		gl.glVertex3f(-cubeWidth, cubeWidth, -cubeWidth);
-		gl.glVertex3f(-cubeWidth, -cubeWidth, -cubeWidth);
-		gl.glVertex3f(-cubeWidth, -cubeWidth, cubeWidth);
-
-		// sky blue (blue +green)
-		gl.glColor3f(0f, 1f, 1f);
-		gl.glVertex3f(cubeWidth, cubeWidth, -cubeWidth);
-		gl.glVertex3f(cubeWidth, cubeWidth, cubeWidth);
-		gl.glVertex3f(cubeWidth, -cubeWidth, cubeWidth);
-		gl.glVertex3f(cubeWidth, -cubeWidth, -cubeWidth);
-
-		gl.glEnd(); // Done Drawing The Quad
+		cgtexture.disable(gl);
 
 		gl.glFlush();
 	}
