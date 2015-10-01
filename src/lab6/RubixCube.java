@@ -12,7 +12,6 @@ import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.FPSAnimator;
-import com.jogamp.opengl.util.gl2.GLUT;
 
 /**
  * Lab task 6: (1) Create a Rubix cube that rotates on an axis. You must include
@@ -31,19 +30,22 @@ public class RubixCube implements GLEventListener {
 	Dimension dim = new Dimension(800, 600);
 	FPSAnimator animator;
 
-	float xpos;
-	float xvel;
-
-	/** rquad */
-	private float rquad = 0.0f;
-
 	/** cube width */
 	private float cubeWidth = 0.9f;
+
+	/** +++++ */
+	float time; // in seconds
+	float cycletime = 10.0f;
+	static int framerate = 60;
+	float lightpos[] = { 50.0f, 100.0f, 200.0f, 1.0f };
 
 	public RubixCube() {
 		jf = new JFrame();
 		profile = GLProfile.getDefault();
 		caps = new GLCapabilities(profile);
+
+		caps.setDoubleBuffered(true);
+
 		canvas = new GLCanvas(caps);
 		canvas.addGLEventListener(this);
 		canvas.requestFocusInWindow();
@@ -52,9 +54,10 @@ public class RubixCube implements GLEventListener {
 		jf.setVisible(true);
 		jf.setPreferredSize(dim);
 		jf.pack();
-		animator = new FPSAnimator(canvas, 60);
-		xpos = 100.0f;
-		xvel = 1.0f;
+
+		// animator = new FPSAnimator(canvas, 60);
+		animator = new FPSAnimator(canvas, framerate);
+		time = 0.0f;
 		animator.start();
 	}
 
@@ -62,27 +65,21 @@ public class RubixCube implements GLEventListener {
 		new RubixCube();
 	}
 
-	@SuppressWarnings("unused")
 	@Override
 	public void init(GLAutoDrawable dr) {
 		GL2 gl2 = dr.getGL().getGL2();
 		GLU glu = new GLU();
-		GLUT glut = new GLUT();
-
 		gl2.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-
 		gl2.glEnable(GL2.GL_DEPTH_TEST);
-
+		gl2.glEnable(GL2.GL_LIGHTING); // +
 		gl2.glMatrixMode(GL2.GL_PROJECTION);
 		gl2.glLoadIdentity();
-
-		glu.gluPerspective(60.0, 1.0, 100.0, 1000.0);
-
+		glu.gluPerspective(80.0, 1.0, 50.0, 3000.0);
+		// gl2.glOrtho(0.0, dim.getWidth(), 0.0, dim.getHeight(), 0, 300f);
 		gl2.glMatrixMode(GL2.GL_MODELVIEW);
 		gl2.glLoadIdentity();
-
-		glu.gluLookAt(100.0, 100.0, 500.0, 100.0, 100.0, 25.0, 0.0, 1.0, 0.0);
-
+		glu.gluLookAt(0.0, 80.0, 500.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+		gl2.glEnable(GL2.GL_NORMALIZE);
 	}
 
 	@Override
@@ -109,9 +106,31 @@ public class RubixCube implements GLEventListener {
 
 		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
 
+		gl.glEnable(GL2.GL_LIGHTING);
+		gl.glPushMatrix();
+		gl.glRotated(0.0, 1.0, 0.0, 0.0);
+
+		float ac[] = { 0.2f, 0.2f, 0.2f, 1.0f };
+		gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_AMBIENT, ac, 0);
+		gl.glEnable(GL2.GL_LIGHT1);
+		float dc[] = { 3.0f, 3.0f, 3.0f, 1.0f };
+		float sc[] = { 3.0f, 3.0f, 3.0f, 1.0f };
+		gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_POSITION, lightpos, 0);
+		gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_DIFFUSE, dc, 0);
+		gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_SPECULAR, sc, 0);
+
+		// set up and draw the rubix cube:
+		gl.glPushMatrix();
 		gl.glLoadIdentity();
 		gl.glTranslatef(0f, 0f, -5.0f);
-		gl.glRotatef(rquad, 0.0f, 1.0f, 0.0f);
+		gl.glRotatef(time * 20.0f, 0.1f, 1.0f, 0.0f);
+
+		float df[] = { 0.0f, 0.2f, 1.0f, 0.0f };
+		float sf[] = { 1.0f, 1.0f, 1.0f, 0.0f };
+		gl.glEnable(GL2.GL_COLOR_MATERIAL);
+		gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_AMBIENT_AND_DIFFUSE, df, 0);
+		gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SPECULAR, sf, 0);
+		gl.glMaterialf(GL2.GL_FRONT_AND_BACK, GL2.GL_SHININESS, 120.0f);
 
 		gl.glColor3f(0.0f, 0.0f, 1.0f);
 		drawRubixCube(gl, -cubeWidth, cubeWidth, -cubeWidth, 1);
@@ -126,8 +145,17 @@ public class RubixCube implements GLEventListener {
 		gl.glColor3f(1f, 1f, 0f);
 		drawRubixCube(gl, -cubeWidth, -cubeWidth, -cubeWidth, 2);
 
+		gl.glDisable(GL2.GL_LIGHTING);
+
+		gl.glPopMatrix();
+
+		gl.glPopMatrix();
+
 		gl.glFlush();
-		rquad -= 2.0f;
+
+		time += 1.0f / framerate;
+		if (time > cycletime)
+			time = 0.0f;
 	}
 
 	/**
