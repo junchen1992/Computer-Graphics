@@ -116,10 +116,10 @@ public class RubixCube implements GLEventListener {
 		float ac[] = { 0.2f, 0.2f, 0.2f, 1.0f };
 		gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_AMBIENT, ac, 0);
 		gl.glEnable(GL2.GL_LIGHT1);
-		// float dc[] = { 3.0f, 3.0f, 3.0f, 1.0f };
-		float dc[] = { 0.8f, 0.8f, 0.8f, 1.0f };
-		// float sc[] = { 3.0f, 3.0f, 3.0f, 1.0f };
-		float sc[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+		float dc[] = { 3.0f, 3.0f, 3.0f, 1.0f };
+		// float dc[] = { 0.8f, 0.8f, 0.8f, 1.0f };
+		float sc[] = { 3.0f, 3.0f, 3.0f, 1.0f };
+		// float sc[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 		gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_POSITION, lightpos, 0);
 		gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_DIFFUSE, dc, 0);
 		gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_SPECULAR, sc, 0);
@@ -134,9 +134,10 @@ public class RubixCube implements GLEventListener {
 		float df[] = { 0.0f, 0.2f, 1.0f, 0.0f };
 		float sf[] = { 1.0f, 1.0f, 1.0f, 0.0f };
 		gl.glEnable(GL2.GL_COLOR_MATERIAL);
-		gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_AMBIENT_AND_DIFFUSE, df, 0);
+		gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_AMBIENT_AND_DIFFUSE, df,
+				0);
 		gl.glMaterialfv(GL2.GL_FRONT_AND_BACK, GL2.GL_SPECULAR, sf, 0);
-		gl.glMaterialf(GL2.GL_FRONT_AND_BACK, GL2.GL_SHININESS, 120.0f);
+		gl.glMaterialf(GL2.GL_FRONT_AND_BACK, GL2.GL_SHININESS, 10.0f);
 
 		// draw the rubix cube:
 		gl.glColor3f(0.0f, 0.0f, 1.0f);
@@ -144,10 +145,10 @@ public class RubixCube implements GLEventListener {
 
 		gl.glColor3f(0.0f, 1.0f, 1.0f);
 		drawRubixCube(gl, -cubeWidth, -cubeWidth, -cubeWidth, 1);
-		gl.glColor3f(0.0f, 1.0f, 0.0f);
 
 		gl.glDisable(GL2.GL_LIGHTING);
 
+		gl.glColor3f(0.0f, 1.0f, 0.0f);
 		drawRubixCube(gl, cubeWidth, -cubeWidth, -cubeWidth, 0);
 		gl.glColor3f(1.0f, 0.0f, 0.0f);
 		drawRubixCube(gl, -cubeWidth, -cubeWidth, -cubeWidth, 0);
@@ -225,8 +226,10 @@ public class RubixCube implements GLEventListener {
 
 			gl.glVertex3f(x0, y0 + 2 * offset + boarderWidth, z0);
 			gl.glVertex3f(x0, y0 + 2 * (offset + boarderWidth), z0);
-			gl.glVertex3f(x0, y0 + 2 * (offset + boarderWidth), z0 + 2 * cubeWidth);
-			gl.glVertex3f(x0, y0 + 2 * offset + boarderWidth, z0 + 2 * cubeWidth);
+			gl.glVertex3f(x0, y0 + 2 * (offset + boarderWidth), z0 + 2
+					* cubeWidth);
+			gl.glVertex3f(x0, y0 + 2 * offset + boarderWidth, z0 + 2
+					* cubeWidth);
 
 			gl.glVertex3f(x0, y0, z0 + offset);
 			gl.glVertex3f(x0, y0, z0 + offset + boarderWidth);
@@ -235,8 +238,10 @@ public class RubixCube implements GLEventListener {
 
 			gl.glVertex3f(x0, y0, z0 + 2 * offset + boarderWidth);
 			gl.glVertex3f(x0, y0, z0 + 2 * (offset + boarderWidth));
-			gl.glVertex3f(x0, y0 + 2 * cubeWidth, z0 + 2 * (offset + boarderWidth));
-			gl.glVertex3f(x0, y0 + 2 * cubeWidth, z0 + 2 * offset + boarderWidth);
+			gl.glVertex3f(x0, y0 + 2 * cubeWidth, z0 + 2
+					* (offset + boarderWidth));
+			gl.glVertex3f(x0, y0 + 2 * cubeWidth, z0 + 2 * offset
+					+ boarderWidth);
 		} else if (axis == 1) {
 			gl.glVertex3f(x0 + offset, y0, z0);
 			gl.glVertex3f(x0 + offset + boarderWidth, y0, z0);
@@ -245,8 +250,10 @@ public class RubixCube implements GLEventListener {
 
 			gl.glVertex3f(x0 + 2 * offset + boarderWidth, y0, z0);
 			gl.glVertex3f(x0 + 2 * (offset + boarderWidth), y0, z0);
-			gl.glVertex3f(x0 + 2 * (offset + boarderWidth), y0, z0 + 2 * cubeWidth);
-			gl.glVertex3f(x0 + 2 * offset + boarderWidth, y0, z0 + 2 * cubeWidth);
+			gl.glVertex3f(x0 + 2 * (offset + boarderWidth), y0, z0 + 2
+					* cubeWidth);
+			gl.glVertex3f(x0 + 2 * offset + boarderWidth, y0, z0 + 2
+					* cubeWidth);
 
 			gl.glVertex3f(x0, y0, z0 + offset);
 			gl.glVertex3f(x0, y0, z0 + offset + boarderWidth);
@@ -255,8 +262,10 @@ public class RubixCube implements GLEventListener {
 
 			gl.glVertex3f(x0, y0, z0 + 2 * offset + boarderWidth);
 			gl.glVertex3f(x0, y0, z0 + 2 * (offset + boarderWidth));
-			gl.glVertex3f(x0 + 2 * cubeWidth, y0, z0 + 2 * (offset + boarderWidth));
-			gl.glVertex3f(x0 + 2 * cubeWidth, y0, z0 + 2 * offset + boarderWidth);
+			gl.glVertex3f(x0 + 2 * cubeWidth, y0, z0 + 2
+					* (offset + boarderWidth));
+			gl.glVertex3f(x0 + 2 * cubeWidth, y0, z0 + 2 * offset
+					+ boarderWidth);
 		} else {
 			gl.glVertex3f(x0 + offset, y0, z0);
 			gl.glVertex3f(x0 + offset + boarderWidth, y0, z0);
@@ -265,8 +274,10 @@ public class RubixCube implements GLEventListener {
 
 			gl.glVertex3f(x0 + 2 * offset + boarderWidth, y0, z0);
 			gl.glVertex3f(x0 + 2 * (offset + boarderWidth), y0, z0);
-			gl.glVertex3f(x0 + 2 * (offset + boarderWidth), y0 + 2 * cubeWidth, z0);
-			gl.glVertex3f(x0 + 2 * offset + boarderWidth, y0 + 2 * cubeWidth, z0);
+			gl.glVertex3f(x0 + 2 * (offset + boarderWidth), y0 + 2 * cubeWidth,
+					z0);
+			gl.glVertex3f(x0 + 2 * offset + boarderWidth, y0 + 2 * cubeWidth,
+					z0);
 
 			gl.glVertex3f(x0, y0 + offset, z0);
 			gl.glVertex3f(x0, y0 + offset + boarderWidth, z0);
@@ -275,8 +286,10 @@ public class RubixCube implements GLEventListener {
 
 			gl.glVertex3f(x0, y0 + 2 * offset + boarderWidth, z0);
 			gl.glVertex3f(x0, y0 + 2 * (offset + boarderWidth), z0);
-			gl.glVertex3f(x0 + 2 * cubeWidth, y0 + 2 * (offset + boarderWidth), z0);
-			gl.glVertex3f(x0 + 2 * cubeWidth, y0 + 2 * offset + boarderWidth, z0);
+			gl.glVertex3f(x0 + 2 * cubeWidth, y0 + 2 * (offset + boarderWidth),
+					z0);
+			gl.glVertex3f(x0 + 2 * cubeWidth, y0 + 2 * offset + boarderWidth,
+					z0);
 		}
 
 		gl.glEnd();
