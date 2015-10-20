@@ -41,6 +41,9 @@ public class Step3 implements GLEventListener, MouseListener {
 	/** cube width */
 	private float cubeWidth = 50.0f;
 
+	int x1, x2;
+	double speed = 0.0;
+
 	public Step3() {
 		jf = new JFrame();
 		profile = GLProfile.getDefault();
@@ -86,7 +89,7 @@ public class Step3 implements GLEventListener, MouseListener {
 
 		gl2.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 
-		drawPhone(gl2, -50, 0.0, 0.0, 150.0);
+		drawCube(gl2, -50, 0.0, 0.0, 150.0);
 
 		xpos += speed;
 		speed = speed / 1.01;
@@ -97,7 +100,7 @@ public class Step3 implements GLEventListener, MouseListener {
 
 	}
 
-	public void drawPhone(GL2 gl, double x1, double y1, double x2, double y2) {
+	public void drawCube(GL2 gl, double x1, double y1, double x2, double y2) {
 
 		gl.glPushMatrix();
 		gl.glEnable(GL.GL_DEPTH_TEST);
@@ -164,9 +167,7 @@ public class Step3 implements GLEventListener, MouseListener {
 	public void reshape(GLAutoDrawable dr, int x, int y, int width, int height) {
 	}
 
-	int x1, x2;
 	long time1, time2;
-	double speed = 0.0;
 
 	@Override
 	public void mousePressed(MouseEvent e) {

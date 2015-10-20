@@ -1,6 +1,8 @@
 package lab5;
 
 import java.awt.Dimension;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 import java.io.File;
 import java.io.IOException;
 
@@ -20,7 +22,7 @@ import com.jogamp.opengl.util.gl2.GLUT;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureIO;
 
-public class ScreenSaverOGL implements GLEventListener {
+public class ScreenSaverOGL implements GLEventListener, MouseMotionListener {
 
 	JFrame jf;
 	GLCanvas canvas;
@@ -43,6 +45,8 @@ public class ScreenSaverOGL implements GLEventListener {
 	// "/Users/Jason/git/Computer-Graphics/index.png";
 	private final static String imageSrc = "/Users/Jason/git/Computer-Graphics/lab5_pic1.png";
 	Texture cgtexture;
+
+	private float xcamrot;
 
 	public ScreenSaverOGL() {
 		jf = new JFrame();
@@ -91,7 +95,10 @@ public class ScreenSaverOGL implements GLEventListener {
 		gl2.glLoadIdentity();
 
 		// *
-		glu.gluLookAt(100.0, 100.0, 500.0, 100.0, 100.0, 25.0, 0.0, 1.0, 0.0);
+		// glu.gluLookAt(100.0, 100.0, 500.0, 100.0, 100.0, 25.0, 0.0, 1.0,
+		// 0.0);
+
+		glu.gluLookAt(0.0, 0.0, 200.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 
 		// load an image:
 		try {
@@ -184,6 +191,7 @@ public class ScreenSaverOGL implements GLEventListener {
 	 */
 	public void display(GLAutoDrawable dr) {
 		GL2 gl = dr.getGL().getGL2();
+		GLU glu = new GLU();
 
 		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
 
@@ -193,6 +201,9 @@ public class ScreenSaverOGL implements GLEventListener {
 		// gl.glPushMatrix();
 
 		gl.glLoadIdentity();
+
+		glu.gluLookAt(lightdis * 100, xcamrot * 10, 200.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+
 		gl.glTranslatef(0f, 0f, -5.0f);
 		gl.glRotatef(rquad, 1.0f, 1.0f, 1.0f);
 		// Start Drawing The Cube
@@ -255,10 +266,10 @@ public class ScreenSaverOGL implements GLEventListener {
 		cgtexture.disable(gl);
 
 		// duplicate:
-		duplicate2(gl, -2.0f, 0.0f, 0.0f);
-		duplicate2(gl, -1.0f, 0.0f, 0.0f);
-		duplicate2(gl, 1.0f, 0.0f, 0.0f);
-		duplicate2(gl, 2.0f, 0.0f, 0.0f);
+		// duplicate2(gl, -2.0f, 0.0f, 0.0f);
+		// duplicate2(gl, -1.0f, 0.0f, 0.0f);
+		// duplicate2(gl, 1.0f, 0.0f, 0.0f);
+		// duplicate2(gl, 2.0f, 0.0f, 0.0f);
 
 		gl.glFlush();
 		rquad -= 1.0f;
@@ -338,6 +349,30 @@ public class ScreenSaverOGL implements GLEventListener {
 		cgtexture.disable(gl);
 
 		gl.glFlush();
+	}
+
+	private Float xcamrotLast;
+	private Float lightdisLast;
+	private float lightdis = 1.0f;
+
+	@Override
+	public void mouseDragged(MouseEvent me) {
+		// TODO Auto-generated method stub
+		if (xcamrotLast != null)
+			xcamrot += ((((float) me.getY()) / canvas.getHeight()) - xcamrotLast) * 360.0f;
+		xcamrotLast = (((float) me.getY()) / canvas.getHeight());
+
+		if (lightdisLast != null)
+			lightdis += ((((float) me.getX()) / canvas.getWidth()) - lightdisLast) * 10.0f;
+		lightdisLast = (((float) me.getX()) / canvas.getWidth());
+
+		canvas.display();
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent e) {
+		// TODO Auto-generated method stub
+
 	}
 
 }

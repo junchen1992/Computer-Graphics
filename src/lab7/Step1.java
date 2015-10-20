@@ -87,11 +87,11 @@ public class Step1 implements GLEventListener, MouseMotionListener {
 		gl2.glLoadIdentity();
 		glu.gluLookAt(lightdis * 100, xcamrot * 10, 200.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 
-		drawPhone(gl2, -50, 0.0, 0.0, 150.0);
+		drawCube(gl2, -50, 0.0, 0.0, 150.0);
 
 	}
 
-	public void drawPhone(GL2 gl, double x1, double y1, double x2, double y2) {
+	public void drawCube(GL2 gl, double x1, double y1, double x2, double y2) {
 
 		gl.glPushMatrix();
 		gl.glEnable(GL2.GL_DEPTH_TEST);
