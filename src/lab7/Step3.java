@@ -112,8 +112,8 @@ public class Step3 implements GLEventListener, MouseListener {
 			speed = 0f;
 		}
 		gl.glRotated(xpos, 0.0, 1.0, 0.0);
+		// gl.glRotated(xpos, 0.0, 1.0, 0.0);
 		gl.glRotated(angle, 0.0, 0.0, 1.0);
-		gl.glRotated(xpos, 0.0, 1.0, 0.0);
 
 		gl.glTranslated(-(float) (x1 + (x2 - x1) / 2), 0f, 0.0f);
 

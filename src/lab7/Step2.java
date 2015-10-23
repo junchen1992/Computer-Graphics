@@ -91,7 +91,7 @@ public class Step2 implements GLEventListener, MouseListener {
 		// drawCube(gl2, x1, 0.0, x2, 150.0);
 
 		xpos += speed;
-		speed = speed / 1.2;
+		speed = speed / 1.05;
 		if (xpos > dim.getWidth())
 			xpos = 0.0f;
 
