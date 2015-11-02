@@ -22,27 +22,6 @@ import com.jogamp.opengl.util.texture.TextureIO;
 
 public class ScreenSaverOGL implements GLEventListener {
 
-	/**
-	 * ScreenSaverOGL - this is a simple screen saver that uses JOGL2 Eric
-	 * McCreath 2009, 2011, 2015
-	 * 
-	 * You need to include the jogl jar files (gluegen-rt.jar and jogl.jar). In
-	 * eclipse use "add external jars" in Project->Properties->Libaries
-	 * otherwise make certain they are in the class path. In the current linux
-	 * computers there files are in the /usr/share/java directory.
-	 * 
-	 * If you are executing from the command line then something like: javac -cp
-	 * .:/usr/share/java/jogl2.jar:/usr/share/java/gluegen2-2.2.4-rt.jar
-	 * ScreenSaverOGL.java java -cp
-	 * .:/usr/share/java/jogl2.jar:/usr/share/java/gluegen2-2.2.4-rt.jar
-	 * ScreenSaverOGL should work.
-	 * 
-	 * On our lab machine you may also need to check you are using Java 7. You
-	 * can run it directly using: /usr/lib/jvm/java-7-openjdk-amd64/bin/javac
-	 * and /usr/lib/jvm/java-7-openjdk-amd64/bin/java
-	 * 
-	 */
-
 	JFrame jf;
 	GLCanvas canvas;
 	GLProfile profile;
@@ -57,7 +36,6 @@ public class ScreenSaverOGL implements GLEventListener {
 	float ypos;
 	float yvel;
 	private final static String imageSrc1 = "/Users/Jason/git/Computer-Graphics/index.png";
-	private final static String imageSrc2 = "/students/u5485230/git/Computer-Graphics/climber.png";
 	Texture cgtexture;
 
 	public ScreenSaverOGL() {
@@ -87,12 +65,10 @@ public class ScreenSaverOGL implements GLEventListener {
 		new ScreenSaverOGL();
 	}
 
-	@SuppressWarnings("unused")
 	@Override
 	public void init(GLAutoDrawable dr) { // set up openGL for 2D drawing
 		GL2 gl2 = dr.getGL().getGL2();
 		GLU glu = new GLU();
-		GLUT glut = new GLUT();
 		gl2.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		gl2.glMatrixMode(GL2.GL_PROJECTION);
 		gl2.glLoadIdentity();
@@ -100,24 +76,19 @@ public class ScreenSaverOGL implements GLEventListener {
 		gl2.glMatrixMode(GL2.GL_MODELVIEW);
 		gl2.glLoadIdentity();
 
-		// !TODO
-		// load an image:
 		try {
 			cgtexture = TextureIO.newTexture(new File(imageSrc1), true);
 			cgtexture.enable(gl2);
 			cgtexture.bind(gl2);
 		} catch (GLException | IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
-	@SuppressWarnings("unused")
 	@Override
 	public void display(GLAutoDrawable dr) { // clear the screen and draw "Save
 												// the Screens"
 		GL2 gl2 = dr.getGL().getGL2();
-		GLU glu = new GLU();
 		GLUT glut = new GLUT();
 
 		gl2.glClear(GL.GL_COLOR_BUFFER_BIT);
@@ -188,7 +159,6 @@ public class ScreenSaverOGL implements GLEventListener {
 		if (xpos > dim.getWidth())
 			xpos = 0.0f;
 
-		/***/
 		ypos += yvel;
 		if (ypos > dim.getHeight())
 			ypos = 0.0f;
