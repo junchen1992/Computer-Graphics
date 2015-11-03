@@ -83,7 +83,6 @@ public class Step1 implements GLEventListener, MouseMotionListener {
 
 		gl2.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 
-		// gl2.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 		gl2.glLoadIdentity();
 		glu.gluLookAt(lightdis * 100, xcamrot * 10, 200.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 
@@ -92,7 +91,6 @@ public class Step1 implements GLEventListener, MouseMotionListener {
 	}
 
 	public void drawCube(GL2 gl, double x1, double y1, double x2, double y2) {
-
 		gl.glPushMatrix();
 		gl.glEnable(GL2.GL_DEPTH_TEST);
 		gl.glTranslated((float) (x1 + (x2 - x1) / 2), 0.0f, 0.0f);
