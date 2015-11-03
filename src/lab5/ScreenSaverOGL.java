@@ -153,7 +153,7 @@ public class ScreenSaverOGL implements GLEventListener, MouseMotionListener {
 	 * @param y
 	 * @param z
 	 */
-	public void duplicate(GL2 gl2, double x, double y, double z) {
+	public void duplicate2(GL2 gl2, double x, double y, double z) {
 		gl2.glTranslated(x, y, z);
 		// change the color of the duplicated polygons:
 		gl2.glColor3f(0.0f, 1.0f, 1.0f);
@@ -191,18 +191,15 @@ public class ScreenSaverOGL implements GLEventListener, MouseMotionListener {
 	 */
 	public void display(GLAutoDrawable dr) {
 		GL2 gl = dr.getGL().getGL2();
-		GLU glu = new GLU();
 
 		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
 
 		cgtexture.enable(gl);
 		cgtexture.bind(gl);
 
-		// gl.glPushMatrix();
+		gl.glPushMatrix();
 
 		gl.glLoadIdentity();
-
-		glu.gluLookAt(lightdis * 100, xcamrot * 10, 200.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 
 		gl.glTranslatef(0f, 0f, -5.0f);
 		gl.glRotatef(rquad, 1.0f, 1.0f, 1.0f);
@@ -261,24 +258,24 @@ public class ScreenSaverOGL implements GLEventListener, MouseMotionListener {
 		// Done Drawing The Quad
 		gl.glEnd();
 
-		// gl.glPopMatrix();
+		gl.glPopMatrix();
 
 		cgtexture.disable(gl);
 
 		// duplicate:
-		// duplicate2(gl, -2.0f, 0.0f, 0.0f);
-		// duplicate2(gl, -1.0f, 0.0f, 0.0f);
-		// duplicate2(gl, 1.0f, 0.0f, 0.0f);
-		// duplicate2(gl, 2.0f, 0.0f, 0.0f);
+		duplicate2(gl, -2.0f, 0.0f, 0.0f);
+		duplicate2(gl, -1.0f, 0.0f, 0.0f);
+		duplicate2(gl, 1.0f, 0.0f, 0.0f);
+		duplicate2(gl, 2.0f, 0.0f, 0.0f);
 
 		gl.glFlush();
 		rquad -= 1.0f;
 	}
 
-	public void duplicate2(GL2 gl, float x, float y, float z) {
+	public void duplicate(GL2 gl, float x, float y, float z) {
 		gl.glPushMatrix();
 
-		// gl.glLoadIdentity();
+		gl.glLoadIdentity();
 		gl.glTranslatef(x, y, z);
 
 		// Rotate The Cube On X, Y & Z

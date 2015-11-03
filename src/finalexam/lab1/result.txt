@@ -1,0 +1,6 @@
+Original:
+	17703 differences found.
+	Speed of lineJava : 10598
+	Speed of line     : 3014
+
+

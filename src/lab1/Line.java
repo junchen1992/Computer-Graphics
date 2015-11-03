@@ -18,8 +18,7 @@ public abstract class Line {
 
 	static Dimension dim = new Dimension(640, 480);
 
-	abstract void line(BufferedImage buf, int x0, int y0, int xn, int yn,
-			int rgb);
+	abstract void line(BufferedImage buf, int x0, int y0, int xn, int yn, int rgb);
 
 	@SuppressWarnings("unused")
 	public static void main(String[] args) throws InterruptedException {
@@ -30,10 +29,8 @@ public abstract class Line {
 		// set up the jframe and bufferedimages
 
 		jframe = new JFrame("Line Drawing");
-		offscreen1 = new BufferedImage(dim.width, dim.height,
-				BufferedImage.TYPE_INT_RGB);
-		offscreen2 = new BufferedImage(dim.width, dim.height,
-				BufferedImage.TYPE_INT_RGB);
+		offscreen1 = new BufferedImage(dim.width, dim.height, BufferedImage.TYPE_INT_RGB);
+		offscreen2 = new BufferedImage(dim.width, dim.height, BufferedImage.TYPE_INT_RGB);
 		JPanel mainpanel = new JPanel();
 		canvas1 = new JComponent() {
 			/**
@@ -87,17 +84,8 @@ public abstract class Line {
 		};
 
 		// your line drawing code
-		Line line2 = new Line() {
+		Line line = new Line() {
 			void line(BufferedImage buf, int x0, int y0, int xn, int yn, int rgb) {
-
-				// add your code here
-
-				// Your code should draw a line from (x0,y0) to (xn,xn) using
-				// the color rgb into buf.
-				// You may assume that the points are within the buffer.
-				// To set a pixel at location (x,y) to color rgb just use
-				// buf.setRGB(x,y,rgb);
-
 				int dx = xn - x0;
 				int dy = yn - y0;
 				float x = x0;
@@ -111,14 +99,13 @@ public abstract class Line {
 					y += yinc;
 					buf.setRGB(Math.round(x), Math.round(y), rgb);
 				}
-
 			}
 		};
 
 		// Step 2: Re-implement your line drawing algorithm using the Bresenham
 		// approach.
 
-		Line line = new Line() {
+		Line line2 = new Line() {
 			@Override
 			void line(BufferedImage buf, int x0, int y0, int xn, int yn, int rgb) {
 				int dx = xn - x0;
@@ -210,7 +197,7 @@ public abstract class Line {
 						dx = -dx;
 						dy = -dy;
 					}
-					// System.out.println(x0 + ", " + y0 + "   ->   " + xn +
+					// System.out.println(x0 + ", " + y0 + " -> " + xn +
 					// ", " + yn + " : " + (1.0 * dy / dx));
 					int x = x0, y = y0;
 					int D = dy - (dx << 1);
@@ -267,8 +254,7 @@ public abstract class Line {
 
 		// dot the second image with blue where it is different
 		Thread.sleep(5000);
-		System.out.println(dotDifference(offscreen1, offscreen2)
-				+ " differences found.");
+		System.out.println(dotDifference(offscreen1, offscreen2) + " differences found.");
 		canvas2.repaint();
 
 		// do the speed test
@@ -291,8 +277,7 @@ public abstract class Line {
 	}
 
 	private static long speedtest(Line line) {
-		BufferedImage buf = new BufferedImage(dim.width, dim.height,
-				BufferedImage.TYPE_INT_RGB);
+		BufferedImage buf = new BufferedImage(dim.width, dim.height, BufferedImage.TYPE_INT_RGB);
 		long start = System.nanoTime();
 		for (int i = 0; i < 5000; i++) {
 			Graphics g = buf.getGraphics();
@@ -324,10 +309,8 @@ public abstract class Line {
 		int green = (new Color(0.0f, 1.0f, 0.0f)).getRGB();
 
 		for (double t = 0.0; t < Math.PI * 2.0; t += Math.PI / 16.0) {
-			lr.line(buf, 100 + (int) (Math.sin(t) * 15.0),
-					100 + (int) (Math.cos(t) * 15.0),
-					100 + (int) (Math.sin(t) * 85.0),
-					100 + (int) (Math.cos(t) * 85.0), red);
+			lr.line(buf, 100 + (int) (Math.sin(t) * 15.0), 100 + (int) (Math.cos(t) * 15.0),
+					100 + (int) (Math.sin(t) * 85.0), 100 + (int) (Math.cos(t) * 85.0), red);
 		}
 
 		Random r = new Random(1);
